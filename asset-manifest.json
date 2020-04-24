@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/BigThonk/static/css/main.cb5de4a9.chunk.css",
+    "main.js": "/BigThonk/static/js/main.cde322c1.chunk.js",
+    "main.js.map": "/BigThonk/static/js/main.cde322c1.chunk.js.map",
+    "runtime-main.js": "/BigThonk/static/js/runtime-main.b7f68a12.js",
+    "runtime-main.js.map": "/BigThonk/static/js/runtime-main.b7f68a12.js.map",
+    "static/js/2.64c4fa01.chunk.js": "/BigThonk/static/js/2.64c4fa01.chunk.js",
+    "static/js/2.64c4fa01.chunk.js.map": "/BigThonk/static/js/2.64c4fa01.chunk.js.map",
+    "index.html": "/BigThonk/index.html",
+    "precache-manifest.7df427aef4541c146182f193b15f6e34.js": "/BigThonk/precache-manifest.7df427aef4541c146182f193b15f6e34.js",
+    "service-worker.js": "/BigThonk/service-worker.js",
+    "static/css/main.cb5de4a9.chunk.css.map": "/BigThonk/static/css/main.cb5de4a9.chunk.css.map",
+    "static/js/2.64c4fa01.chunk.js.LICENSE.txt": "/BigThonk/static/js/2.64c4fa01.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b7f68a12.js",
+    "static/js/2.64c4fa01.chunk.js",
+    "static/css/main.cb5de4a9.chunk.css",
+    "static/js/main.cde322c1.chunk.js"
+  ]
+}
