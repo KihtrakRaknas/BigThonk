@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/BigThonk/precache-manifest.5332099b2a44440dc8d9238b91d60047.js"
+  "/BigThonk/precache-manifest.ea43d9ff0feb8d8140bdcfbf07ee783b.js"
 );
 
 self.addEventListener('message', (event) => {
