@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0a873d3e7d7344c6aa985ab706d79423",
+    "revision": "8fc497196f5aa873b81afbf2afd1719f",
     "url": "/clarity/index.html"
   },
   {
