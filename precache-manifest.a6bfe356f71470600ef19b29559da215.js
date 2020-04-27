@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "fef8c4349faea6332cf2e2bdf5614d5f",
+    "revision": "f552da9195f1402e4a964c1e75165a39",
     "url": "/clarity/index.html"
   },
   {
-    "revision": "4d760da6feab34cc4395",
+    "revision": "ac593197ec6d2951b084",
     "url": "/clarity/static/css/main.80bcb0b4.chunk.css"
   },
   {
@@ -16,11 +16,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/clarity/static/js/2.dffffcf9.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "4d760da6feab34cc4395",
-    "url": "/clarity/static/js/main.0c59f2eb.chunk.js"
+    "revision": "ac593197ec6d2951b084",
+    "url": "/clarity/static/js/main.06b95ab8.chunk.js"
   },
   {
     "revision": "593948e496227598ae97",
     "url": "/clarity/static/js/runtime-main.885851ab.js"
+  },
+  {
+    "revision": "02e9f3ceff960f2ca82a91b11b1ace30",
+    "url": "/clarity/static/media/LoCLogo.02e9f3ce.svg"
   }
 ]);
