@@ -15,7 +15,7 @@ export default function App() {
       <Router basename={process.env.PUBLIC_URL}>
         <div>
             <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-                <Link to="/" style={{color:"white"}}><a class="navbar-brand">A Lack Of Clarity</a></Link>
+                <Link to="/" style={{color:"white"}}><a class="navbar-brand"><img src={require('./Images/LoCLogo.svg')} width="25" height="25" alt="A Lack Of Clarity Logo"/> A Lack Of Clarity</a></Link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>

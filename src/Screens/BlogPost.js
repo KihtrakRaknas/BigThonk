@@ -4,6 +4,7 @@ import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import LoadingDiv from '../Components/LoadingDiv';
 import Comment from '../Components/Comment';
 import firebase from '../firebase.js'
+import '../WordPressCore.css';
 
 export default class BlogPost extends React.Component {
     constructor(props) {
@@ -15,6 +16,7 @@ export default class BlogPost extends React.Component {
             postId = this.props.match.params.postId
         this.postId = postId;
         this.getPost()
+        
     }
     state={comments:[]}
     render(){
@@ -35,7 +37,7 @@ export default class BlogPost extends React.Component {
                         <br/>
                         <hr/>
                         <br/>
-                        <h2 className="text-center">Comments:</h2><br/>{this.commentInput()}
+                        <h2 className="text-center">Comments: </h2><br/>{this.commentInput()}
                         {this.state.comments.length>0?<div>{this.state.comments}{this.commentsObj&&Object.keys(this.commentsObj).length>0?<button className="btn btn btn-outline-info btn-block" onClick={this.get5Comments}>Show more comments</button>:null}</div>:<p><em>No comments yet. You could be the first!</em></p>}
                         <br/>
                     </div>}
@@ -71,9 +73,10 @@ export default class BlogPost extends React.Component {
     checkFirebase = () =>{
         console.log("post: "+this.postId)
         const postRef = firebase.database().ref(this.postId)
-        postRef.child('views').transaction(function(views) {
-            return (views || 0) + 1;
-        });
+        if(!navigator.userAgent.includes("headless"))
+            postRef.child('views').transaction(function(views) {
+                return (views || 0) + 1;
+            });
         postRef.child('comments').on('value',(snapshot)=>{
             this.commentsObj = snapshot.val();
             if(this.state.comments.length==0)
