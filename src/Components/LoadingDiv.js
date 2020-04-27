@@ -3,9 +3,17 @@ import ReactLoading from 'react-loading';
 export default class LoadingDiv extends React.Component {
     constructor(props) {
         super(props);
-        setTimeout(()=>this.setState({showText:true}),500)
         this.state={showText:false}
     }
+
+    componentDidMount(){
+        this.showTimeout = setTimeout(()=>this.setState({showText:true}),500)
+    }
+
+    componentWillUnmount(){
+        clearTimeout(this.showTimeout);
+    }
+    
     render(){
         return(
             <div>

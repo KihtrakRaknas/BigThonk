@@ -1,10 +1,80 @@
 .App {
-  
   color: white;
 }
 
 body{
   background-color: black;
+  --font-headings: unset; 
+  --font-base: unset; 
+  --font-headings-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; 
+  --font-base-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+}
+.blogpost img{
+  max-width: 100%;
+  max-height: 30vh;
+}
+
+.blogpost{
+  font-size: 1.5em;
+  border-width:1px;
+  border-style:solid;
+  border-radius: 20px;
+  margin-top:10px;
+  margin-bottom:10px;
+  /*font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+  line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1600 - 300)));*/
+}
+
+.blogpost h2{
+  margin-top:30px;
+  margin-left:30px;
+  font-weight: bold;
+}
+
+.blogpost h1{
+  text-decoration: underline;
+}
+
+hr{
+  background-color:white;
+}
+
+.author-box{
+  margin-top: 10px;
+  font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+}
+
+.author-box p {
+  margin-bottom: 0px;
+}
+
+.comment h5{
+  display: inline-block;
+  word-break: break-word;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  -ms-word-break: break-word;
+  word-break: break-word;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.comment p{
+  display: inline-block;
+  font-size:20px;
+  word-break: break-word;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  -ms-word-break: break-word;
+  word-break: break-word;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 .card{
