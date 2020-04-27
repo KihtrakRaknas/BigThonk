@@ -9,18 +9,28 @@
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="A blog written by some high schoolers. Exploring the topics we find interesting. Read if you dare." />
     <link rel="apple-touch-icon" href="logo-192x192.png" />
-    <meta name="keywords" content="Blog, Big Thonk, Big Brain, Thinking big, SBHS, South Brunswick High School, New Jersey, NJ, news">
+    <meta name="keywords" content="Blog, Big Thonk, Big Brain, Thinking big, SBHS, South Brunswick High School, New Jersey, NJ, news, A Lack Of Clarity">
     <meta name="author" content="Karthik Sankar">
-    <meta property="og:title" content="The Big Thonk Blog!"/>
-    <meta property="og:url" content="https://kihtrak.com/big-thonk"/>
+    <meta property="og:title" content="A Lack Of Clarity! - Home Page"/>
+    <meta property="og:site_name" content="A Lack Of Clarity!"/>
+    <meta property="og:url" content="https://kihtrak.com/clarity"/>
     <meta property="og:image" content=""/>
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Check out the blog!" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" media="print" onload="this.media='all'">
-    <title>Big Thonk</title>
+    <title>A Lack Of Clarity</title>
   </head>
   <body data-spy="scroll" data-target=".navbar">
+      <script>
+          (function(){
+            var redirect = sessionStorage.redirect;
+            delete sessionStorage.redirect;
+            if (redirect && redirect != location.href) {
+              history.replaceState(null, null, redirect);
+            }
+          })();
+        </script>
     <div id="root"></div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

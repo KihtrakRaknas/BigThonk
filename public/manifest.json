@@ -1,6 +1,6 @@
 {
-  "short_name": "Big Thonk",
-  "name": "The Big Thonk Blog",
+  "short_name": "Clarity",
+  "name": "A Lack Of Clarity",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,7 +18,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "https://kihtrak.com/big-thonk",
+  "start_url": "https://kihtrak.com/clarity",
   "display": "standalone",
   "theme_color": "#FFA500",
   "background_color": "#000000"
