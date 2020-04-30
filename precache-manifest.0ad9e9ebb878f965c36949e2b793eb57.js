@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d1020bc6de8d890a2db7f5804d0026d2",
+    "revision": "67642fe2d1826f9654f161e4ed560abf",
     "url": "/clarity/index.html"
   },
   {
-    "revision": "549493720bd103790caa",
+    "revision": "d1ef9605b53fe53bbf44",
     "url": "/clarity/static/css/main.254f0df1.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/clarity/static/js/2.0749b6d6.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "549493720bd103790caa",
-    "url": "/clarity/static/js/main.c55f008b.chunk.js"
+    "revision": "d1ef9605b53fe53bbf44",
+    "url": "/clarity/static/js/main.4a78f9bb.chunk.js"
   },
   {
     "revision": "593948e496227598ae97",
