@@ -29,9 +29,10 @@ export default class BlogPost extends React.Component {
             return  <div className="App container"><br/><br/><h1 className="text-center">Couldn't find the post you are looking for</h1><h3 className="text-center">Double check your link!</h3></div>
         console.log("rendering blogpost ");
         let classNameStr = "App container blogpost"
+        console.log(classNameStr)
         return(
             <div className={classNameStr}>
-                <p>classNameStr</p>
+                <p>{classNameStr}</p>
                     <br/>
                     {!this.state.content?<LoadingDiv></LoadingDiv>:<div>
                         <h1 className="text-center">{this.state.title}</h1>
