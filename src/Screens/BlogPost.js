@@ -1,10 +1,10 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser';
-import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import LoadingDiv from '../Components/LoadingDiv';
 import Comment from '../Components/Comment';
 import firebase from '../firebase.js'
 import '../WordPressCore.css';
+import '../App.css';
 
 export default class BlogPost extends React.Component {
     constructor(props) {
@@ -14,20 +14,25 @@ export default class BlogPost extends React.Component {
             postId = this.props.post.slug
         else
             postId = this.props.match.params.postId
+        console.log(postId)
         this.postId = postId;
         this.getPost()
-        
     }
+
     state={comments:[]}
+
     render(){
         let postId = this.props.match?this.props.match.params.postId:"feed"
-        if(postId=="about"||postId=="authors")
-            return  <div className="App container">{ReactHtmlParser(this.state.content)}</div>
+        if(postId==="about")
+            return  <div className="App container"><br/>{ReactHtmlParser(this.state.content)}</div>
         if(this.state.err)
             return  <div className="App container"><br/><br/><h1 className="text-center">Couldn't find the post you are looking for</h1><h3 className="text-center">Double check your link!</h3></div>
+        console.log("rendering blogpost ");
+        let classNameStr = "App container blogpost"
         return(
-            <div className="App container blogpost">
-                <br/>
+            <div className={classNameStr}>
+                <p>classNameStr</p>
+                    <br/>
                     {!this.state.content?<LoadingDiv></LoadingDiv>:<div>
                         <h1 className="text-center">{this.state.title}</h1>
                         <div className="d-flex justify-content-between author-box"><p>{this.state.name?this.state.name:null}</p><p>{this.state.date?this.state.date.toLocaleDateString()+"   "+this.state.date.toLocaleTimeString():null}</p></div>
@@ -61,7 +66,7 @@ export default class BlogPost extends React.Component {
         const postRef = firebase.database().ref(this.postId)
         let name = document.getElementById("nameInput").value
         let text = document.getElementById("textInput").value
-        if(name.trim()=="" || text.trim()=="")
+        if(name.trim()==="" || text.trim()==="")
             alert("Please include a name and a comment before posting");
         else{
             let postKey = postRef.child('comments').push().key
@@ -76,10 +81,13 @@ export default class BlogPost extends React.Component {
         if(!navigator.userAgent.includes("headless"))
             postRef.child('views').transaction(function(views) {
                 return (views || 0) + 1;
-            });
+            }).catch(err=>{
+                console.log("FIREBASE DIDN'T UPDATE")
+                console.log(err)
+            })
         postRef.child('comments').on('value',(snapshot)=>{
             this.commentsObj = snapshot.val();
-            if(this.state.comments.length==0)
+            if(this.state.comments.length===0)
                 this.get5Comments();
         })  
     }
@@ -89,8 +97,8 @@ export default class BlogPost extends React.Component {
         if(this.state.comments)
             commentsEl = [...this.state.comments];
         if(this.commentsObj)
-            for(var i = 0; i!=5; i++){
-                if(Object.keys(this.commentsObj).length==0)
+            for(var i = 0; i!==5; i++){
+                if(Object.keys(this.commentsObj).length===0)
                     break;
                 let commentID = Object.keys(this.commentsObj)[Math.floor(Math.random()*Object.keys(this.commentsObj).length)]
                 let comment = JSON.parse(JSON.stringify(this.commentsObj[commentID]))
@@ -104,28 +112,32 @@ export default class BlogPost extends React.Component {
     getPost = ()=>{
         if(this.props.post){
             let post = this.props.post;
-            console.log(post)
+            //console.log(post)
             
             this.updatePageTags(post)
             this.state = {name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), err:false, comments:[]}
             this.checkFirebase();
         }else{
-            console.log("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+this.postId)
-            fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+this.postId).then((res)=>res.json()).then((post)=>{
-                console.log(post)
+            let postId = this.postId === "about"?"first-blog-post":this.postId
+            console.log(postId)
+            console.log("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)
+            fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId).then((res)=>res.json()).then((post)=>{
+                //console.log(post)
                 console.log(post.author.first_name)
                 this.updatePageTags(post)
                 console.log("page tags updated")
                 this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), err:false})
                 console.log("STATE UPDATED")
-                this.checkFirebase();
+                if(this.postId !== "about")
+                    this.checkFirebase();
             }).catch((err)=>{
-                console.log('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+this.postId))
-                fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+this.postId)).then((res)=>res.json()).then((post)=>{
-                    console.log(post)
+                console.log('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId))
+                fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)).then((res)=>res.json()).then((post)=>{
+                    //console.log(post)
                     this.updatePageTags(post)
                     this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), err:false})
-                    this.checkFirebase();
+                    if(this.postId !== "about")
+                        this.checkFirebase();
                 }).catch((err)=>{
                     console.log(err)
                     this.setState({err:true})
@@ -135,12 +147,13 @@ export default class BlogPost extends React.Component {
       }
 
       updatePageTags = (post)=>{
-        document.title = post.title;
-        document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',post.title)
-        document.getElementsByTagName('meta').namedItem('description').setAttribute('content',post.excerpt?post.excerpt.replace(/<[^>]*>?/gm, ''):"A article titled: "+post.title)
-        document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',post.excerpt?post.excerpt.replace(/<[^>]*>?/gm, '').replace(' [&hellip;]','...'):"A article titled: "+post.title)
+                                                                     document.title = post.title;
+        document.querySelectorAll('[property="og:title"]')[0].setAttribute('content', post.title)
+        document.getElementsByTagName('meta').namedItem('description').setAttribute('content',post.excerpt?post.excerpt.replace(/<[^>]*>?/gm, '').replace(' [&hellip;]','...'):"A article titled: "+post.title)
+           document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',post.excerpt?post.excerpt.replace(/<[^>]*>?/gm, '').replace(' [&hellip;]','...'):"A article titled: "+post.title)
         document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',post.post_thumbnail?post.post_thumbnail.URL:"")
         document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','article')
-        document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',window.location.href)
+        document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/"+post.slug)
+             document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/"+post.slug)
       }
 }

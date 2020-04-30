@@ -111,3 +111,11 @@ a img.aligncenter {
 .has-text-align-center{
     text-align: center;
 }
+
+.has-text-align-right{
+    text-align: right;
+}
+
+pre{
+    color:white;
+}

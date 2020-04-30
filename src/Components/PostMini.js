@@ -1,11 +1,8 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser';
-import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import firebase from '../firebase.js';
 export default class PostMini extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount(){
         const postRef = firebase.database().ref(this.props.id)
@@ -21,19 +18,27 @@ export default class PostMini extends React.Component {
     }
 
     render(){
+        let catagories = []
+        console.log(this.props.categories)
+        if(this.props.categories)
+            for(let category in this.props.categories)
+                catagories.push(<small key={category} style={{paddingLeft:5,paddingRight:5,marginLeft:5,marginRight:3, paddingBottom:2, borderRadius:5, backgroundColor:"white", color:"black"}}>{category}</small>)
+        else
+            catagories = [<small key="err" style={{marginRight:10,marginLeft:10, backgroundColor:"grey"}}>No categories found!</small>]
         return(
-            <div className="col-sm-6">
+            <div className="col-sm-6" id={this.props.id}>
                 <div className="card" >
-                    {this.props.img?<img className="card-img-top" src={this.props.img} alt="Card image cap"/>:null}
+                    {this.props.img?<img className="card-img-top" src={this.props.img} alt={this.props.title}/>:null}
                     <div className="card-body" >
-                        <h3 className="card-title">{this.props.title}</h3>
-                        <p className="card-text">{ReactHtmlParser(this.props.text.replace(' [&hellip;]','...'))}</p>
+                        <h3 className="card-title"><strong>{this.props.title}</strong></h3>
+                        <div className="card-text categories" style={{textAlign:"center"}}>{catagories}</div>
+                        <div className="card-text">{ReactHtmlParser(this.props.text.replace(' [&hellip;]','...'))}</div>
                         <div className="btn-div">
-                        <Link to={"/"+this.props.id}><a className="btn btn btn-outline-primary">Click Here to Read More</a></Link>
+                        {window.location.search !== "?showBtn=false"?<Link to={"/"+this.props.id} className="btn btn btn-outline-primary">Click Here to Read More</Link>:null}
                         </div>
                     </div>
                     <div className="card-footer">
-                        { this.props.name +" - "+this.props.date.toLocaleDateString()+" - 👀"+this.state.views+" 💬"+this.state.comments}
+                        { this.props.name +" - "+this.props.date.toLocaleDateString()+" - 👀"+(window.location.search !== "?showBtn=false"?(this.state.views+" 💬"+this.state.comments):"")}
                     </div>
                 </div>
             </div>

@@ -1,9 +1,6 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 
 export default class Comment extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     getColor(){ 
         return "hsl(" + 360 * Math.random() + ',' + (25 + 70 * Math.random()) + '%,' + (85 + 10 * Math.random()) + '%)'
     }      

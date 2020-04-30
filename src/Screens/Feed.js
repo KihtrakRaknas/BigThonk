@@ -1,5 +1,4 @@
 import React from 'react';
-import PostMini from '../Components/PostMini';
 import LoadingDiv from '../Components/LoadingDiv';
 import BlogPost from './BlogPost.js'
 
@@ -58,11 +57,11 @@ export default class Feed extends React.Component {
   }
 
   resetPageTags = (post)=>{
-    document.title = "A Lack Of Clarity! - Feed";
-    document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"A Lack Of Clarity! - Feed")
+    document.title = "Feed A Lack Of Clarity!";
+    document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"Feed - A Lack Of Clarity!")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"A blog written by some high schoolers. Exploring the topics we find interesting. Read if you dare.")
     document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"This is the blog feed, it lets you veiw our posts all on one page!")
-    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"")
+    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/LoCLogo.svg")
     document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','website')
     document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',window.location.href)
   }

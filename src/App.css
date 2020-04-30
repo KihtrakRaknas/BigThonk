@@ -14,6 +14,28 @@ body{
   width: 100%;
 }
 
+.circular--landscape {
+  display: inline-block;
+  position: relative;
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 50%;
+  
+}
+
+.circular--landscape img {
+  width: auto;
+  height: 100%;
+}
+
+.profile{
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 10px;
+  background-color: #2e2e2e;
+}
+
 .blogpost{
   font-size: 1.5em;
   border-width:1px;
@@ -91,6 +113,10 @@ hr{
 }
 .card-title{
   text-align: center;
+  margin-bottom: 0px;
+}
+.categories{
+  margin-bottom: 3px;
 }
 .btn-div{
   text-align: center;
