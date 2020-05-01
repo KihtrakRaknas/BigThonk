@@ -5,6 +5,7 @@ import Comment from '../Components/Comment';
 import firebase from '../firebase.js'
 import '../WordPressCore.css';
 import '../App.css';
+import ShareBar from '../Components/ShareBar';
 
 export default class BlogPost extends React.Component {
     constructor(props) {
@@ -39,7 +40,7 @@ export default class BlogPost extends React.Component {
                         {ReactHtmlParser(this.state.content)}
                         <br/>
                         <hr/>
-                        <br/>
+                        <ShareBar url={"https://kihtrak.com/clarity/"+this.postId} title={this.state.title} name={this.state.name} image={this.state.image}/>
                         <h2 className="text-center">Comments: </h2><br/>{this.commentInput()}
                         {this.state.comments.length>0?<div>{this.state.comments}{this.commentsObj&&Object.keys(this.commentsObj).length>0?<button className="btn btn btn-outline-info btn-block" onClick={this.get5Comments}>Show more comments</button>:null}</div>:<p><em>No comments yet. You could be the first!</em></p>}
                         <br/>
@@ -122,7 +123,7 @@ export default class BlogPost extends React.Component {
             //console.log(post)
             
             this.updatePageTags(post)
-            this.state = {name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), err:false, comments:[]}
+            this.state = {name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false, comments:[]}
             this.checkFirebase();
         }else{
             let postId = this.postId === "about"?"first-blog-post":this.postId
@@ -133,7 +134,7 @@ export default class BlogPost extends React.Component {
                 console.log(post.author.first_name)
                 this.updatePageTags(post)
                 console.log("page tags updated")
-                this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), err:false})
+                this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
                 console.log("STATE UPDATED")
                 if(this.postId !== "about")
                     this.checkFirebase();
@@ -142,7 +143,7 @@ export default class BlogPost extends React.Component {
                 fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)).then((res)=>res.json()).then((post)=>{
                     //console.log(post)
                     this.updatePageTags(post)
-                    this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), err:false})
+                    this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
                     if(this.postId !== "about")
                         this.checkFirebase();
                 }).catch((err)=>{
