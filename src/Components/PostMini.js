@@ -26,7 +26,7 @@ export default class PostMini extends React.Component {
         else
             catagories = [<small key="err" style={{marginRight:10,marginLeft:10, backgroundColor:"grey"}}>No categories found!</small>]
         return(
-            <div className="col-sm-6" id={this.props.id}>
+            <div className="" id={this.props.id}>
                 <div className="card" >
                     {this.props.img?<img className="card-img-top" src={this.props.img} alt={this.props.title}/>:null}
                     <div className="card-body" >

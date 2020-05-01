@@ -13,8 +13,8 @@ export default class Home extends React.Component {
 
   render(){
     return (
-      <div className="App container">
-        <div id="Posts" className="row">
+      <div className="App container-fluid">
+        <div id="Posts" className="card-columns">
           {this.state.miniPosts?this.state.miniPosts:<LoadingDiv></LoadingDiv>}
         </div>
       </div>

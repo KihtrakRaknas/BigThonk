@@ -49,11 +49,11 @@ export default class BlogPost extends React.Component {
     }
     
     componentDidUpdate = () =>{
-        if(document.getElementsByClassName("App container")[0].classList.contains("blogpost"))
+        if(document.getElementsByClassName("App container")[document.getElementsByClassName("App container").length-1].classList.contains("blogpost"))
             console.log("WORKING NORMALLY")
         else{
             console.log("adding blogpost")
-            document.getElementsByClassName("App container")[0].classList.add("blogpost")
+            document.getElementsByClassName("App container")[document.getElementsByClassName("App container").length-1].classList.add("blogpost")
         }
     }
 
