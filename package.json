@@ -1,6 +1,6 @@
 {
   "name": "big-thonk",
-  "version": "3.4.20",
+  "version": "3.4.21",
   "private": true,
   "homepage": "https://kihtrak.com/clarity",
   "dependencies": {
@@ -45,5 +45,11 @@
   "devDependencies": {
     "gh-pages": "^2.2.0",
     "react-snap": "^1.23.0"
+  },
+  "reactSnap": {
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ]
   }
 }
