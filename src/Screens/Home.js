@@ -6,11 +6,14 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
-    this.state = {pages:[]};
+    this.state = {pages:[], categories:[<option value="">Show All Posts</option>]};
     this.readyToCheckForMore = false;
     this.page = 0;
+    this.cat = ""
     this.getPosts();
     this.resetPageTags()
+    this.getCategories()
+    
   }
 
   componentDidMount(){
@@ -31,9 +34,20 @@ export default class Home extends React.Component {
   render(){
     return (
       <div className="App container-fluid">
-          {this.state.pages?this.state.pages:<LoadingDiv></LoadingDiv>}
+            <select id="filter" class="custom-select mt-2" onChange={this.filterByCat}>
+              {this.state.categories}
+            </select>
+          {this.state.pages.length>0?this.state.pages:<LoadingDiv></LoadingDiv>}
       </div>
     );
+  }
+
+  filterByCat = (event) =>{
+    console.log(event.target.value)
+    this.cat = event.target.value
+    this.page = 0;
+    this.setState({pages:[]})
+    this.getPosts()
   }
 
   componentDidUpdate (){
@@ -48,11 +62,35 @@ export default class Home extends React.Component {
     }
   }
 
+  getCategories = () =>{
+    let link = "https://public-api.wordpress.com/rest/v1.1/sites/176343073/categories"
+    fetch(link).then((res)=>res.json()).then((categoriesJSON)=>{
+      this.updateWithCategoriesJSON(categoriesJSON)
+    }).catch((err)=>{
+      console.log(err)
+      fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent(link)).then((res)=>res.json()).then((categoriesJSON)=>{
+        this.updateWithCategoriesJSON(categoriesJSON)
+      }).catch((err)=>{
+        console.log(err)
+      })
+    })
+  }
+
+  updateWithCategoriesJSON = (categoriesJSON) =>{
+    let categories = [...this.state.categories]
+    for(let category of categoriesJSON.categories){
+      if(category.post_count>0)
+        categories.push(<option value={category.slug}>{category.name}</option>)
+    }
+    this.setState({categories})
+  }
+
   getPosts = ()=>{
     this.page++;
     console.log(this.page)
     this.readyToCheckForMore=false;
-    let link = "https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/?page="+this.page
+    let link = "https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/?category="+this.cat+"&page="+this.page
+    console.log(link)
     fetch(link).then((res)=>res.json()).then((postsJSON)=>{
       this.updateWithPostsJSON(postsJSON)
     }).catch((err)=>{
@@ -84,7 +122,7 @@ export default class Home extends React.Component {
     this.setState({pages})
   }
 
-  resetPageTags = (post)=>{
+  resetPageTags = ()=>{
                                                                 document.title = "A Lack Of Clarity!";
     document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"A Lack Of Clarity! - Home Page")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"A blog written by some high schoolers. Exploring the topics we find interesting. Read if you dare.")

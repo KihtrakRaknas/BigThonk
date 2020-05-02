@@ -10,8 +10,9 @@ import BlogPost from './Screens/BlogPost.js'
 import './App.css';
 import Feed from './Screens/Feed'
 import Authors from './Screens/Authors'
-import packageJson from '../package.json';
-import About from './Screens/About'
+import packageJson from '../package.json'
+import About from './Screens/About';
+import Archive from './Screens/Archive'
 global.appVersion = packageJson.version;
 
 const semverGreaterThan = (versionA, versionB) => {
@@ -91,11 +92,12 @@ export default class App extends React.Component {
                     <Route exact={true} path="/feed" component = {Feed}/>Authors
                     <Route exact={true} path="/about" component = {About}/>
                     <Route exact={true} path="/authors" component = {Authors}/>
+                    <Route exact={true} path="/archive" component = {Archive}/>
                     <Route path="/:postId" component={BlogPost} />
                     <Route exact={true} path="/" component = {Home}/>
                 </Switch>
-                <footer>
-                  <p><small>&copy; Copyright {new Date().getFullYear()}, A Lack Of Clarity</small>  -  Follow us on Instagram for updates: <a href="https://www.instagram.com/alackofclarity/">@alackofclarity</a></p>
+                <footer className="d-flex justify-content-between flex-wrap">
+                  <p>View the full blog <Link to="/archive">archive</Link></p><p>Follow us on Instagram for updates: <a href="https://www.instagram.com/alackofclarity/">@alackofclarity</a></p><p><small>&copy; Copyright {new Date().getFullYear()}, A Lack Of Clarity</small></p>
                 </footer>
             </Router>
         );
