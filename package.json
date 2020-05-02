@@ -1,6 +1,6 @@
 {
   "name": "big-thonk",
-  "version": "3.1.16",
+  "version": "3.1.17",
   "private": true,
   "homepage": "https://kihtrak.com/clarity",
   "dependencies": {
@@ -45,8 +45,5 @@
   "devDependencies": {
     "gh-pages": "^2.2.0",
     "react-snap": "^1.23.0"
-  },
-  "reactSnap": {
-    "inlineCss": true
   }
 }
