@@ -1,6 +1,6 @@
 {
   "name": "big-thonk",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "private": true,
   "homepage": "https://kihtrak.com/clarity",
   "dependencies": {
@@ -23,7 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "npm version patch --force && gh-pages -d build",
     "generate-build-version": "node generate-build-version",
     "prebuild": "npm run generate-build-version"
   },
