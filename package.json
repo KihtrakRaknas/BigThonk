@@ -1,6 +1,6 @@
 {
   "name": "big-thonk",
-  "version": "3.4.22",
+  "version": "3.4.23",
   "private": true,
   "homepage": "https://kihtrak.com/clarity",
   "dependencies": {
@@ -51,6 +51,7 @@
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage"
-    ]
+    ],
+    "concurrency": 1
   }
 }
