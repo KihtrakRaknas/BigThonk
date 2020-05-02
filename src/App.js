@@ -63,7 +63,6 @@ export default class App extends React.Component {
       render(){
         return (
             <Router basename={process.env.PUBLIC_URL}>
-                <div>
                     <nav className="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
                         <Link to="/" style={{color:"white"}} className="navbar-brand"><img src={require('./Images/LoCLogo.svg')} width="25" height="25" alt="A Lack Of Clarity Logo"/> A Lack Of Clarity</Link>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +85,6 @@ export default class App extends React.Component {
                             </ul>
                         </div>
                     </nav>
-        
                 {/* A <Switch> looks through its children <Route>s and
                     renders the first one that matches the current URL. */}
                 <Switch>
@@ -96,7 +94,9 @@ export default class App extends React.Component {
                     <Route path="/:postId" component={BlogPost} />
                     <Route exact={true} path="/" component = {Home}/>
                 </Switch>
-                </div>
+                <footer>
+                  <p><small>&copy; Copyright {new Date().getFullYear()}, A Lack Of Clarity</small>  -  Follow us on Instagram for updates: <a href="https://www.instagram.com/alackofclarity/">@alackofclarity</a></p>
+                </footer>
             </Router>
         );
     }

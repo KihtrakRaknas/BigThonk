@@ -6,22 +6,38 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
-    this.state = {};
+    this.state = {pages:[]};
+    this.readyToCheckForMore = false;
+    this.page = 0;
     this.getPosts();
     this.resetPageTags()
   }
 
+  componentDidMount(){
+    window.addEventListener('scroll', this.handleScroll)
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener('scroll', this.handleScroll)
+  }
+
+  handleScroll = () =>{
+    if(this.readyToCheckForMore!=false && this.isMore && window.scrollY + window.innerHeight*2>window.scrollMaxY){
+      console.log("RENDER MORE"+this.page)
+      this.getPosts()
+    }
+}
+
   render(){
     return (
       <div className="App container-fluid">
-        <div id="Posts" className="card-columns">
-          {this.state.miniPosts?this.state.miniPosts:<LoadingDiv></LoadingDiv>}
-        </div>
+          {this.state.pages?this.state.pages:<LoadingDiv></LoadingDiv>}
       </div>
     );
   }
+
   componentDidUpdate (){
-    if(this.state.miniPosts && window.location.href.includes("#")){
+    if(this.state.pages.length>0 && window.location.href.includes("#")){
       let scrollId = window.location.href.substring(window.location.href.indexOf("#")+1)
       console.log(scrollId)
       if(document.getElementById(scrollId))
@@ -33,26 +49,39 @@ export default class Home extends React.Component {
   }
 
   getPosts = ()=>{
-    fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/").then((res)=>res.json()).then((postsJSON)=>{
-      let miniPosts = [];
-      for(let post of postsJSON.posts){
-        //console.log(post)
-        miniPosts.push(<PostMini id={post.slug} text={post.excerpt} date={new Date(post.date)} title={post.title} img={post.post_thumbnail?post.post_thumbnail.URL:null} name={post.author.first_name+" "+post.author.last_name} key={post.slug} categories={post.categories}></PostMini>)
-      }
-      this.setState({miniPosts})
+    this.page++;
+    console.log(this.page)
+    this.readyToCheckForMore=false;
+    let link = "https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/?page="+this.page
+    fetch(link).then((res)=>res.json()).then((postsJSON)=>{
+      this.updateWithPostsJSON(postsJSON)
     }).catch((err)=>{
       console.log(err)
-      fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/")).then((res)=>res.json()).then((postsJSON)=>{
-        let miniPosts = [];
-        for(let post of postsJSON.posts){
-          //console.log(post)
-          miniPosts.push(<PostMini id={post.slug} text={post.excerpt} date={new Date(post.date)} title={post.title} img={post.post_thumbnail?post.post_thumbnail.URL:null} name={post.author.first_name+" "+post.author.last_name} key={post.id} categories={post.categories}></PostMini>)
-        }
-        this.setState({miniPosts})
+      fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent(link)).then((res)=>res.json()).then((postsJSON)=>{
+        this.updateWithPostsJSON(postsJSON)
       }).catch((err)=>{
         console.log(err)
       })
     })
+  }
+
+  updateWithPostsJSON = (postsJSON) =>{
+    if(postsJSON.meta.next_page)
+      this.isMore = true;
+    else
+      this.isMore = false;
+    this.readyToCheckForMore = true;
+    let pages = [...this.state.pages]
+    if(this.state.pages.length>0 && this.page!=1){
+      pages.push(<hr/>)
+    }
+    let miniPosts = [];
+    for(let post of postsJSON.posts){
+      //console.log(post)
+      miniPosts.push(<PostMini id={post.slug} text={post.excerpt} date={new Date(post.date)} title={post.title} img={post.post_thumbnail?post.post_thumbnail.URL:null} name={post.author.first_name+" "+post.author.last_name} key={post.slug} categories={post.categories}></PostMini>)
+    }
+    pages.push(<div id="Posts" className="card-columns">{miniPosts}</div>)
+    this.setState({pages})
   }
 
   resetPageTags = (post)=>{

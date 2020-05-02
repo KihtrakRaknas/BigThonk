@@ -19,7 +19,7 @@ export default class PostMini extends React.Component {
 
     render(){
         let catagories = []
-        console.log(this.props.categories)
+        //console.log(this.props.categories)
         if(this.props.categories)
             for(let category in this.props.categories)
                 catagories.push(<small key={category} style={{paddingLeft:5,paddingRight:5,marginLeft:5,marginRight:3, paddingBottom:2, borderRadius:5, backgroundColor:"white", color:"black"}}>{category}</small>)

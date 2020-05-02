@@ -7,6 +7,7 @@ export default class Feed extends React.Component {
     super(props);
     // Don't call this.setState() here!
     this.state = {};
+    this.page=0;
     this.getPosts();
   }
 
@@ -34,25 +35,43 @@ export default class Feed extends React.Component {
   }
 
   getPosts = ()=>{
-    fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/").then((res)=>res.json()).then((postsJSON)=>{
-        this.postsJSON = postsJSON.posts
-        this.renderNewPost()
-    }).catch(()=>{
-      fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/")).then((res)=>res.json()).then((postsJSON)=>{
-        this.postsJSON = postsJSON.posts
-        this.renderNewPost()
+    let postsPerPage = 5;
+    if(!this.totalPosts || this.totalPosts>postsPerPage*this.page){
+      this.page++
+      console.log("get new posts: "+this.page )
+      this.gettingNewsPosts = true;
+      fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/?number="+postsPerPage+"&page="+this.page).then((res)=>res.json()).then((postsJSON)=>{
+        this.totalPosts = postsJSON.found
+          if(!this.postsJSON)
+            this.postsJSON = []
+          this.postsJSON = this.postsJSON.concat(postsJSON.posts)
+          this.gettingNewsPosts = false;
+          this.renderNewPost()
+      }).catch(()=>{
+        fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/?number=5&page="+this.page)).then((res)=>res.json()).then((postsJSON)=>{
+          this.totalPosts = postsJSON.found
+          if(!this.postsJSON)
+            this.postsJSON = []
+          this.postsJSON.concat(postsJSON.posts)
+          this.gettingNewsPosts = false;
+          this.renderNewPost()
+        })
       })
-    })
+    }
   }
 
   renderNewPost = () =>{
         let posts = [];
         if(this.state.posts)
             posts = [...this.state.posts]
+        //console.log(this.postsJSON)
         if(this.postsJSON && this.postsJSON.length>0){
             posts.push(<BlogPost post={this.postsJSON[0]}></BlogPost>)
             this.postsJSON.splice(0,1)
             this.setState({posts})
+        }else if(this.postsJSON && this.postsJSON.length==0){
+          if(!this.gettingNewsPosts)
+            this.getPosts()
         }
   }
 
