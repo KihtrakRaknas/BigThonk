@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/clarity/static/css/main.7f0e8d4c.chunk.css",
-    "main.js": "/clarity/static/js/main.aee00b90.chunk.js",
-    "main.js.map": "/clarity/static/js/main.aee00b90.chunk.js.map",
+    "main.js": "/clarity/static/js/main.56a19ed4.chunk.js",
+    "main.js.map": "/clarity/static/js/main.56a19ed4.chunk.js.map",
     "runtime-main.js": "/clarity/static/js/runtime-main.885851ab.js",
     "runtime-main.js.map": "/clarity/static/js/runtime-main.885851ab.js.map",
     "static/js/2.b95dfae9.chunk.js": "/clarity/static/js/2.b95dfae9.chunk.js",
     "static/js/2.b95dfae9.chunk.js.map": "/clarity/static/js/2.b95dfae9.chunk.js.map",
     "index.html": "/clarity/index.html",
-    "precache-manifest.ff64c94fc0e122d91ddd57144427e48b.js": "/clarity/precache-manifest.ff64c94fc0e122d91ddd57144427e48b.js",
+    "precache-manifest.c5ef9210ebc1ee1759106ee3cfa7214b.js": "/clarity/precache-manifest.c5ef9210ebc1ee1759106ee3cfa7214b.js",
     "service-worker.js": "/clarity/service-worker.js",
     "static/css/main.7f0e8d4c.chunk.css.map": "/clarity/static/css/main.7f0e8d4c.chunk.css.map",
     "static/js/2.b95dfae9.chunk.js.LICENSE.txt": "/clarity/static/js/2.b95dfae9.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.885851ab.js",
     "static/js/2.b95dfae9.chunk.js",
     "static/css/main.7f0e8d4c.chunk.css",
-    "static/js/main.aee00b90.chunk.js"
+    "static/js/main.56a19ed4.chunk.js"
   ]
 }
