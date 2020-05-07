@@ -1,6 +1,6 @@
 {
   "name": "big-thonk",
-  "version": "6.1.2",
+  "version": "6.1.3",
   "private": true,
   "homepage": "https://kihtrak.com/clarity",
   "dependencies": {
@@ -11,6 +11,7 @@
     "firebase": "^7.14.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-ga": "^2.7.0",
     "react-html-parser": "^2.0.2",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.1.2",
