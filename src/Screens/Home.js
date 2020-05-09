@@ -1,12 +1,13 @@
 import React from 'react';
 import PostMini from '../Components/PostMini';
 import LoadingDiv from '../Components/LoadingDiv';
-
+import EmailJoin from '../Components/EmailJoin'
+import Masonry from 'react-masonry-component';
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
-    this.state = {pages:[], categories:[<option value="">Show All Posts</option>]};
+    this.state = {posts:[], categories:[<option value="" key="all">Show All Posts</option>]};
     this.readyToCheckForMore = false;
     this.page = 0;
     this.cat = ""
@@ -25,7 +26,7 @@ export default class Home extends React.Component {
   }
 
   handleScroll = () =>{
-    if(this.readyToCheckForMore!=false && this.isMore && window.scrollY + window.innerHeight*2>window.scrollMaxY){
+    if(this.readyToCheckForMore!=false && this.isMore && window.scrollY + window.innerHeight*3>document.body.scrollHeight){
       console.log("RENDER MORE"+this.page)
       this.getPosts()
     }
@@ -33,12 +34,16 @@ export default class Home extends React.Component {
 
   render(){
     return (
-      <div className="App container-fluid">
-            <select id="filter" class="custom-select mt-2" onChange={this.filterByCat}>
-              {this.state.categories}
-            </select>
-          {this.state.pages.length>0?this.state.pages:<LoadingDiv></LoadingDiv>}
-      </div>
+        <div id="home-screen" className="App container-fluid">
+          <select id="filter" className="custom-select mt-2" onChange={this.filterByCat}>
+            {this.state.categories}
+          </select>
+          
+          <Masonry className={'my-gallery-class'}>
+            {this.state.posts.length>0?this.state.posts:<LoadingDiv></LoadingDiv>}
+          </Masonry>
+          {/*<div className="row"></div>*/}
+        </div>
     );
   }
 
@@ -51,7 +56,7 @@ export default class Home extends React.Component {
   }
 
   componentDidUpdate (){
-    if(this.state.pages.length>0 && window.location.href.includes("#")){
+    if(this.state.posts.length>0 && window.location.href.includes("#")){
       let scrollId = window.location.href.substring(window.location.href.indexOf("#")+1)
       console.log(scrollId)
       if(document.getElementById(scrollId))
@@ -80,7 +85,7 @@ export default class Home extends React.Component {
     let categories = [...this.state.categories]
     for(let category of categoriesJSON.categories){
       if(category.post_count>0)
-        categories.push(<option value={category.slug}>{category.name}</option>)
+        categories.push(<option value={category.slug} key={category.slug}>{category.name}</option>)
     }
     this.setState({categories})
   }
@@ -104,22 +109,24 @@ export default class Home extends React.Component {
   }
 
   updateWithPostsJSON = (postsJSON) =>{
-    if(postsJSON.meta.next_page)
+    if(postsJSON.meta.next_page || postsJSON.found>this.page*20)
       this.isMore = true;
     else
       this.isMore = false;
     this.readyToCheckForMore = true;
-    let pages = [...this.state.pages]
+    /*let pages = [...this.state.pages]
     if(this.state.pages.length>0 && this.page!=1){
-      pages.push(<hr/>)
-    }
-    let miniPosts = [];
+      pages.push(<hr key={"hr"+this.page}/>)
+    }*/
+    let miniPosts = [...this.state.posts];
     for(let post of postsJSON.posts){
       //console.log(post)
-      miniPosts.push(<PostMini id={post.slug} text={post.excerpt} date={new Date(post.date)} title={post.title} img={post.post_thumbnail?post.post_thumbnail.URL:null} name={post.author.first_name+" "+post.author.last_name} key={post.slug} categories={post.categories}></PostMini>)
+      miniPosts.push(<PostMini id={post.slug} text={post.excerpt} date={new Date(post.date)} content={post.content} title={post.title} img={post.post_thumbnail?post.post_thumbnail.URL:null} name={post.author.first_name+" "+post.author.last_name} key={post.slug} categories={post.categories}></PostMini>)
     }
-    pages.push(<div id="Posts" className="card-columns">{miniPosts}</div>)
-    this.setState({pages})
+    if(this.page==1 && localStorage.getItem("hideEmailCard")!="true")
+      miniPosts.splice( 1+Math.floor(Math.random()*(miniPosts.length-1)), 0, <EmailJoin key="emailCard" card/>);
+    //pages.push(<div id="Posts" key={"pageNum"+this.page} className="card-columns">{miniPosts}</div>)
+    this.setState({posts:miniPosts})
   }
 
   resetPageTags = ()=>{
@@ -127,7 +134,7 @@ export default class Home extends React.Component {
     document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"A Lack Of Clarity! - Home Page")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"A blog written by some high schoolers. Exploring the topics we find interesting. Read if you dare.")
        document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"Check out the blog!")
-    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/LoCLogo.svg")
+    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")
     document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','website')
     document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/")
          document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/")

@@ -2,6 +2,7 @@ import React from 'react'
 import ReactHtmlParser from 'react-html-parser';
 import LoadingDiv from '../Components/LoadingDiv';
 import '../WordPressCore.css';
+import EmailJoin from '../Components/EmailJoin'
 
 export default class About extends React.Component {
     constructor(props) {
@@ -12,13 +13,22 @@ export default class About extends React.Component {
 
     render(){
         if(this.state.err)
-            return  <div className="App container"><br/><br/><h1 className="text-center">Page had trouble loading. Try again later.</h1><h3 className="text-center">Double check your link!</h3></div>
-        return  (!this.state.content)?<LoadingDiv></LoadingDiv>:<div className="App container"><br/>{ReactHtmlParser(this.state.content)}</div>
+            return  <div id="about-err-screen" className="App container"><br/><br/><h1 className="text-center">Page had trouble loading. Try again later.</h1><h3 className="text-center">Double check your link!</h3></div>
+        return  (!this.state.content)?<LoadingDiv></LoadingDiv>:
+        <div class="all-screen-container">
+            <div id="about-screen" className="App container">
+                <br/>
+                {ReactHtmlParser(this.state.content)}
+                <br/><br/>
+                <EmailJoin/>
+                <br/><br/>
+            </div>
+        </div>
     }
 
 
     getPost = ()=>{
-            let postId ="first-blog-post";
+            let postId ="about";
             console.log(postId)
             console.log("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)
             fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId).then((res)=>res.json()).then((post)=>{

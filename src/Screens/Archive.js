@@ -1,5 +1,6 @@
 import React from 'react';
 import LoadingDiv from '../Components/LoadingDiv';
+import {Link} from "react-router-dom";
 
 export default class Archive extends React.Component {
   constructor(props) {
@@ -13,9 +14,11 @@ export default class Archive extends React.Component {
 
   render(){
     return (
-      <div className="App container">
-          <br/>
-          {this.state.posts?this.state.posts:<LoadingDiv></LoadingDiv>}
+    <div className="all-screen-container">
+        <div id="achive-screen" className="App container">
+            <br/>
+            {this.state.posts?this.state.posts:<LoadingDiv></LoadingDiv>}
+        </div>
       </div>
     );
   }
@@ -40,10 +43,11 @@ export default class Archive extends React.Component {
     let posts = [...this.state.posts]
     for(let post of postsJSON.posts){
       //console.log(post)
-      posts.push(<p key={post.slug}><a href={"https://kihtrak.com/clarity/"+post.slug} >{`${new Date(post.date).toLocaleDateString()} - ${post.title} by: ${post.author.first_name+" "+post.author.last_name}`}</a></p>)
+      //href={"https://kihtrak.com/clarity/"+post.slug}
+      posts.push(<p key={post.slug}><Link to={"/"+post.slug} >{`${new Date(post.date).toLocaleDateString()} - ${post.title} by: ${post.author.first_name+" "+post.author.last_name}`}</Link></p>)
     }
     this.setState({posts})
-    if(postsJSON.meta.next_page)
+    if(postsJSON.meta.next_page || postsJSON.found>this.page*100)
         this.getPosts()
   }
 
@@ -52,7 +56,7 @@ export default class Archive extends React.Component {
     document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"A Lack Of Clarity! - Archive")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"An archive of all the posts on this blog")
        document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"An archive of all the posts on this blog")
-    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/LoCLogo.svg")
+    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")
     document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','website')
     document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/archive")
          document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/archive")

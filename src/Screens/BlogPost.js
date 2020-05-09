@@ -26,15 +26,18 @@ export default class BlogPost extends React.Component {
         let postId = this.props.match?this.props.match.params.postId:"feed"
         if(postId==="about")
             return  <div className="App container"><br/>{ReactHtmlParser(this.state.content)}</div>
+        console.log(this.state.err)
         if(this.state.err)
             return  <div className="App container"><br/><br/><h1 className="text-center">Couldn't find the post you are looking for</h1><h3 className="text-center">Double check your link!</h3></div>
         console.log("rendering blogpost ");
-        return(
-            <div className="App container blogpost">
+        console.log(this.state.content)
+        //console.log(temp)
+        return(<div className="all-screen-container">
+            <div id="blogpost-screen" className="App container blogpost">
                     <br/>
-                    {!this.state.content?<LoadingDiv></LoadingDiv>:<div>
+                    {!this.state.content && false?<LoadingDiv></LoadingDiv>:<div>
                         <h1 className="text-center">{this.state.title}</h1>
-                        <div className="d-flex justify-content-between author-box"><p>{this.state.name?this.state.name:null}</p><p>{this.state.date?this.state.date.toLocaleDateString()+"   "+this.state.date.toLocaleTimeString():null}</p></div>
+                        <div className="d-flex justify-content-between author-box"><p> {this.state.name&&this.state.name.trim()?this.state.name:<em>Anonymous Submission</em>} </p><p>{this.state.date?this.state.date.toLocaleDateString()+"   "+this.state.date.toLocaleTimeString():null}</p></div>
                         <hr/>
                         <br/>
                         {ReactHtmlParser(this.state.content)}
@@ -46,24 +49,26 @@ export default class BlogPost extends React.Component {
                         <br/>
                     </div>}
             </div>
-        )
+        </div>)
     }
     
     componentDidUpdate = () =>{
-        if(document.getElementsByClassName("App container")[document.getElementsByClassName("App container").length-1].classList.contains("blogpost"))
-            console.log("WORKING NORMALLY")
-        else{
-            console.log("adding blogpost")
-            document.getElementsByClassName("App container")[document.getElementsByClassName("App container").length-1].classList.add("blogpost")
+        if(document.getElementsByClassName("App container").length>0){
+            if(document.getElementsByClassName("App container")[document.getElementsByClassName("App container").length-1].classList.contains("blogpost"))
+                console.log("WORKING NORMALLY")
+            else{
+                console.log("adding blogpost")
+                document.getElementsByClassName("App container")[document.getElementsByClassName("App container").length-1].classList.add("blogpost")
+            }
         }
-    }
+    }   
 
     commentInput = ()=>{
         if(!this.state.writing)
             return <div><button className="btn btn btn-outline-success btn-block" onClick={()=>this.setState({writing:true})}>Create Comment</button><br/></div>
         return(
             <div>
-            <input class="form-control" id="nameInput" placeholder="Type your name here"></input><br/>
+            <input className="form-control" id="nameInput" placeholder="Type your name here"></input><br/>
             <textarea className="form-control" id="textInput" rows="3" placeholder="Type your comment here"></textarea><br/>
             <button className="btn btn btn-outline-success btn-block" onClick={this.post}>Post</button><br/>
             </div>
@@ -86,7 +91,8 @@ export default class BlogPost extends React.Component {
     checkFirebase = () =>{
         console.log("post: "+this.postId)
         const postRef = firebase.database().ref(this.postId)
-        if(!navigator.userAgent.includes("headless"))
+        console.log("User Agent: "+navigator.userAgent)
+        if(!navigator.userAgent.includes("headless")&&!navigator.userAgent.includes("ReactSnap"))
             postRef.child('views').transaction(function(views) {
                 return (views || 0) + 1;
             }).catch(err=>{
@@ -130,22 +136,30 @@ export default class BlogPost extends React.Component {
             console.log(postId)
             console.log("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)
             fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId).then((res)=>res.json()).then((post)=>{
-                //console.log(post)
-                console.log(post.author.first_name)
-                this.updatePageTags(post)
-                console.log("page tags updated")
-                this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
-                console.log("STATE UPDATED")
-                if(this.postId !== "about")
-                    this.checkFirebase();
+                if(post.error)
+                    this.setState({err:true})
+                else{
+                    //console.log(post)
+                    console.log(post.author.first_name)
+                    this.updatePageTags(post)
+                    console.log("page tags updated")
+                    this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
+                    console.log("STATE UPDATED")
+                    if(this.postId !== "about")
+                        this.checkFirebase();
+                }
             }).catch((err)=>{
                 console.log('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId))
                 fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)).then((res)=>res.json()).then((post)=>{
-                    //console.log(post)
-                    this.updatePageTags(post)
-                    this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
-                    if(this.postId !== "about")
-                        this.checkFirebase();
+                    if(post.error)
+                        this.setState({err:true})   
+                    else{ 
+                        //console.log(post)
+                        this.updatePageTags(post)
+                        this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
+                        if(this.postId !== "about")
+                            this.checkFirebase();
+                    }
                 }).catch((err)=>{
                     console.log(err)
                     this.setState({err:true})

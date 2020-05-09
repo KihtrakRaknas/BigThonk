@@ -13,6 +13,27 @@ import Authors from './Screens/Authors'
 import packageJson from '../package.json'
 import About from './Screens/About';
 import Archive from './Screens/Archive'
+import LoadingDiv from './Components/LoadingDiv';
+
+Promise.all([
+  import ('autotrack/lib/plugins/page-visibility-tracker'),
+  import ('autotrack/lib/plugins/outbound-link-tracker'),
+  import ('autotrack/lib/plugins/url-change-tracker'
+)]).then(()=>{
+  if(!navigator.userAgent.includes("headless")&&!navigator.userAgent.includes("ReactSnap")){
+    window.ga('create', 'UA-56299659-2', 'auto');
+    window.ga('require', 'pageVisibilityTracker');
+    window.ga('require', 'outboundLinkTracker');
+    window.ga('require', 'urlChangeTracker',   {fieldsObj: {
+      dimension1: 'virtual'
+    }});
+
+    window.ga('send', 'pageview', {
+      dimension1: 'page load'
+    });
+  }
+})
+
 global.appVersion = packageJson.version;
 
 const semverGreaterThan = (versionA, versionB) => {
@@ -32,7 +53,12 @@ const semverGreaterThan = (versionA, versionB) => {
 };
 
 export default class App extends React.Component {
+  constructor(props){
+    super(props)
+    console.log("contructed")
+  }
     componentDidMount() {
+        console.log("Mount!")
         fetch('https://kihtrak.com/clarity/meta.json')
           .then((response) => {
               console.log(response)
@@ -51,7 +77,10 @@ export default class App extends React.Component {
               if (caches) {
                 // Service worker cache should be cleared with caches.delete()
                 caches.keys().then(function(names) {
-                  for (let name of names) caches.delete(name);
+                  for (let name of names) {
+                    console.log(name)
+                    caches.delete(name);
+                  }
                 });
               }
               // delete browser cache and hard reload
@@ -95,6 +124,9 @@ export default class App extends React.Component {
                     <Route exact={true} path="/archive" component = {Archive}/>
                     <Route path="/:postId" component={BlogPost} />
                     <Route exact={true} path="/" component = {Home}/>
+                    {/*<Route>
+                      <LoadingDiv />
+                    </Route>*/}
                 </Switch>
                 <footer className="d-flex justify-content-between flex-wrap">
                   <p>View the full blog <Link to="/archive">archive</Link></p><p>Follow us on Instagram for updates: <a href="https://www.instagram.com/alackofclarity/">@alackofclarity</a></p><p><small>&copy; Copyright {new Date().getFullYear()}, A Lack Of Clarity</small></p>

@@ -26,9 +26,11 @@ export default class Feed extends React.Component {
 
   render(){
     return (
-      <div className="App container">
-        <div id="Posts" className="row">
-          {this.state.posts?this.state.posts:<LoadingDiv></LoadingDiv>}
+      <div class="all-screen-container">
+        <div id="feed-screen" className="App container">
+          <div id="Posts" className="row">
+            {this.state.posts?this.state.posts:<LoadingDiv></LoadingDiv>}
+          </div>
         </div>
       </div>
     );
@@ -38,7 +40,7 @@ export default class Feed extends React.Component {
     let postsPerPage = 5;
     if(!this.totalPosts || this.totalPosts>postsPerPage*this.page){
       this.page++
-      console.log("get new posts: "+this.page )
+      // /console.log("get new posts: "+this.page )
       this.gettingNewsPosts = true;
       fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/?number="+postsPerPage+"&page="+this.page).then((res)=>res.json()).then((postsJSON)=>{
         this.totalPosts = postsJSON.found
@@ -80,7 +82,7 @@ export default class Feed extends React.Component {
     document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"Feed - A Lack Of Clarity!")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"A blog written by some high schoolers. Exploring the topics we find interesting. Read if you dare.")
     document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"This is the blog feed, it lets you veiw our posts all on one page!")
-    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/LoCLogo.svg")
+    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")
     document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','website')
     document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',window.location.href)
   }

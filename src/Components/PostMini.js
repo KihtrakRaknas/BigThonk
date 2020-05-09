@@ -2,6 +2,9 @@ import React from 'react'
 import ReactHtmlParser from 'react-html-parser';
 import { Link } from 'react-router-dom';
 import firebase from '../firebase.js';
+import HomeItem from './HomeItem.js';
+const readingTime = require('reading-time');
+const rs = require('text-readability')
 export default class PostMini extends React.Component {
 
     componentDidMount(){
@@ -12,9 +15,25 @@ export default class PostMini extends React.Component {
                 this.setState({views: snap.views?snap.views:0,comments: snap.comments?Object.keys(snap.comments).length:0})
         })
     }
+
     state={
         views:0,
         comments:0
+    }
+
+    tag = (category, color) =>{
+        return <small key={category} style={{display:"inline-block", paddingLeft:5,paddingRight:5,marginLeft:5,marginRight:3, paddingBottom:2, borderRadius:5, backgroundColor:color?color:"white", color:color?"white":"black"}}>{category}</small>
+    }
+
+    easeOfReading = (content) =>{
+        let score = rs.fleschReadingEase(content)
+        if(score>75)
+            return "Easy"
+        if(score>50)
+            return "Intermediate"
+        if(score>25)
+            return "Advanced"
+        return "Very Advanced"
     }
 
     render(){
@@ -22,12 +41,12 @@ export default class PostMini extends React.Component {
         //console.log(this.props.categories)
         if(this.props.categories)
             for(let category in this.props.categories)
-                catagories.push(<small key={category} style={{paddingLeft:5,paddingRight:5,marginLeft:5,marginRight:3, paddingBottom:2, borderRadius:5, backgroundColor:"white", color:"black"}}>{category}</small>)
-        else
-            catagories = [<small key="err" style={{marginRight:10,marginLeft:10, backgroundColor:"grey"}}>No categories found!</small>]
+                catagories.push(this.tag(category))
+        catagories.push(this.tag(readingTime(this.props.content).text, "grey"))
+        catagories.push(this.tag("Readability: "+this.easeOfReading(this.props.content.replace(/<[^>]*>?/gm, '')), "grey"))
         return(
-            <div className="" id={this.props.id}>
-                <div className="card" >
+            <HomeItem>
+                <div className="card" id={this.props.id}>
                     {this.props.img?<img className="card-img-top" src={this.props.img} alt={this.props.title}/>:null}
                     <div className="card-body" >
                         <h3 className="card-title"><strong>{this.props.title}</strong></h3>
@@ -38,10 +57,10 @@ export default class PostMini extends React.Component {
                         </div>
                     </div>
                     <div className="card-footer">
-                        { this.props.name +" - "+this.props.date.toLocaleDateString()+" - 👀"+(window.location.search !== "?showBtn=false"?(this.state.views+" 💬"+this.state.comments):"")}
+                        { (this.props.name.trim()?this.props.name:"Anonymous Submission") +" - "+this.props.date.toLocaleDateString()+" - 👀"+(window.location.search !== "?showBtn=false"?(this.state.views+" 💬"+this.state.comments):"")}
                     </div>
                 </div>
-            </div>
+            </HomeItem>
         )
     }
 }
