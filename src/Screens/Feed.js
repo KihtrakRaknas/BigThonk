@@ -1,6 +1,7 @@
 import React from 'react';
 import LoadingDiv from '../Components/LoadingDiv';
 import BlogPost from './BlogPost.js'
+import EmailJoin from '../Components/EmailJoin'
 
 export default class Feed extends React.Component {
   constructor(props) {
@@ -26,11 +27,10 @@ export default class Feed extends React.Component {
 
   render(){
     return (
-      <div class="all-screen-container">
-        <div id="feed-screen" className="App container">
-          <div id="Posts" className="row">
-            {this.state.posts?this.state.posts:<LoadingDiv></LoadingDiv>}
-          </div>
+      <div id="feed-screen" className="App container">
+        {/*<EmailJoin className="text-center"/>*/}
+        <div id="Posts" className="row">
+          {this.state.posts?this.state.posts:<LoadingDiv></LoadingDiv>}
         </div>
       </div>
     );
@@ -80,6 +80,7 @@ export default class Feed extends React.Component {
   resetPageTags = (post)=>{
     document.title = "Feed A Lack Of Clarity!";
     document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"Feed - A Lack Of Clarity!")
+    document.getElementsByTagName('meta').namedItem('author').setAttribute('content',"Karthik Sankar")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"A blog written by some high schoolers. Exploring the topics we find interesting. Read if you dare.")
     document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"This is the blog feed, it lets you veiw our posts all on one page!")
     document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")

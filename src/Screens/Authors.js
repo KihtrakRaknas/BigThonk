@@ -84,13 +84,18 @@ export default class Authors extends React.Component {
   }
 
   resetPageTags = (post)=>{
+    if(document.querySelectorAll('[property="article:published_time"]').length>0)
+        document.querySelectorAll('[property="article:published_time"]')[0].remove()
+    if(document.querySelectorAll('[property="article:modified_time"]').length>0)
+        document.querySelectorAll('[property="article:modified_time"]')[0].remove()
                                                                 document.title = "Authors - A Lack Of Clarity!";
     document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"Authors - A Lack Of Clarity!")
+    document.getElementsByTagName('meta').namedItem('author').setAttribute('content',"Karthik Sankar")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"A list of the authors at A Lack Of Clarity")
        document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"A list of the authors at A Lack Of Clarity")
     document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")
     document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','website')
-    document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/authors")
-         document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/authors")
+    document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/authors/")
+         document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/authors/")
   }
 }

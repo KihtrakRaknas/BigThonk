@@ -20,7 +20,7 @@ export default class BlogPost extends React.Component {
         this.getPost()
     }
 
-    state={comments:[]}
+    state={comments:[],commentsLength:0}
 
     render(){
         let postId = this.props.match?this.props.match.params.postId:"feed"
@@ -32,19 +32,19 @@ export default class BlogPost extends React.Component {
         console.log("rendering blogpost ");
         console.log(this.state.content)
         //console.log(temp)
-        return(<div className="all-screen-container">
+        return(<div className="all-screen-container" itemscope itemtype="http://schema.org/BlogPosting">
             <div id="blogpost-screen" className="App container blogpost">
                     <br/>
                     {!this.state.content && false?<LoadingDiv></LoadingDiv>:<div>
-                        <h1 className="text-center">{this.state.title}</h1>
-                        <div className="d-flex justify-content-between author-box"><p> {this.state.name&&this.state.name.trim()?this.state.name:<em>Anonymous Submission</em>} </p><p>{this.state.date?this.state.date.toLocaleDateString()+"   "+this.state.date.toLocaleTimeString():null}</p></div>
+                        <h1 className="text-center" itemprop="headline">{this.state.title}</h1>
+                        <div className="d-flex justify-content-between author-box"><p rel="author">{this.state.name&&this.state.name.trim()?this.state.name:<em>Anonymous Submission</em>}</p>{this.state.date?<p><span>Published </span><span>{`${this.state.date.toLocaleString('default', { month: 'short', day: "numeric", year: "numeric"})}   ${this.state.date.toLocaleTimeString().replace(/([\d])(:[\d]{2})(:[\d]{2})(.*)/, "$1$4")}`}</span></p>:null}</div>
                         <hr/>
                         <br/>
-                        {ReactHtmlParser(this.state.content)}
+                        <div itemprop="articleBody">{ReactHtmlParser(this.state.content)}</div>
                         <br/>
                         <hr/>
                         <ShareBar url={"https://kihtrak.com/clarity/"+this.postId} title={this.state.title} name={this.state.name} image={this.state.image}/>
-                        <h2 className="text-center">Comments: </h2><br/>{this.commentInput()}
+                        <h2 className="text-center">Comments: <span itemprop="commentCount">({this.state.commentsLength})</span> </h2><br/>{this.commentInput()}
                         {this.state.comments.length>0?<div>{this.state.comments}{this.commentsObj&&Object.keys(this.commentsObj).length>0?<button className="btn btn btn-outline-info btn-block" onClick={this.get5Comments}>Show more comments</button>:null}</div>:<p><em>No comments yet. You could be the first!</em></p>}
                         <br/>
                     </div>}
@@ -120,7 +120,7 @@ export default class BlogPost extends React.Component {
                 commentsEl.push(<Comment name={comment.name?comment.name:"No Name"} text={comment.text?comment.text:"No Text"} key={JSON.stringify(comment)}></Comment>)
             }
         console.log(commentsEl.length)
-        this.setState({comments:commentsEl})
+        this.setState({comments:commentsEl,commentsLength:(this.commentsObj?Object.keys(this.commentsObj).length:0)+commentsEl.length})
     }
 
     getPost = ()=>{
@@ -135,47 +135,65 @@ export default class BlogPost extends React.Component {
             let postId = this.postId === "about"?"first-blog-post":this.postId
             console.log(postId)
             console.log("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)
-            fetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId).then((res)=>res.json()).then((post)=>{
-                if(post.error)
-                    this.setState({err:true})
-                else{
-                    //console.log(post)
-                    console.log(post.author.first_name)
-                    this.updatePageTags(post)
-                    console.log("page tags updated")
-                    this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
-                    console.log("STATE UPDATED")
-                    if(this.postId !== "about")
-                        this.checkFirebase();
-                }
-            }).catch((err)=>{
-                console.log('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId))
-                fetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)).then((res)=>res.json()).then((post)=>{
-                    if(post.error)
-                        this.setState({err:true})   
-                    else{ 
-                        //console.log(post)
-                        this.updatePageTags(post)
-                        this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
-                        if(this.postId !== "about")
-                            this.checkFirebase();
-                    }
-                }).catch((err)=>{
+            console.log(navigator.userAgent)
+            if(navigator.userAgent.includes("headless"))
+                this.getPostFetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)).catch((err)=>{
                     console.log(err)
                     this.setState({err:true})
                 })
-            })
+            else
+                this.getPostFetch("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId).catch((err)=>{
+                    console.log('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId))
+                    this.getPostFetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)).catch((err)=>{
+                        console.log(err)
+                        this.setState({err:true})
+                    })
+                })
         }
+      }
+
+      getPostFetch = (url) =>{
+          return fetch(url).then((res)=>res.json()).then((post)=>{
+            if(post.error)
+                this.setState({err:true})
+            else{
+                //console.log(post)
+                console.log(post.author.first_name)
+                this.updatePageTags(post)
+                console.log("page tags updated")
+                this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
+                console.log("STATE UPDATED")
+                if(this.postId !== "about")
+                    this.checkFirebase();
+            }
+        })
       }
 
       updatePageTags = (post)=>{
                                                                      document.title = post.title;
         document.querySelectorAll('[property="og:title"]')[0].setAttribute('content', post.title)
+        document.getElementsByTagName('meta').namedItem('author').setAttribute('content',post.author.first_name+" "+post.author.last_name)
+        if(document.querySelectorAll('[property="article:published_time"]').length>0)
+            document.querySelectorAll('[property="article:published_time"]')[0].setAttribute('content',post.date)
+        else{
+            let tag = document.createElement("meta")
+            tag.setAttribute('property',"article:published_time")
+            tag.setAttribute('content',post.date)
+            document.head.appendChild(tag)
+        }
+        if(document.querySelectorAll('[property="article:modified_time"]').length>0)
+            document.querySelectorAll('[property="article:modified_time"]')[0].setAttribute('content',post.modified)
+        else{
+            let tag = document.createElement("meta")
+            tag.setAttribute('property',"article:modified_time")
+            tag.setAttribute('content',post.modified)
+            document.head.appendChild(tag)
+        }
         document.getElementsByTagName('meta').namedItem('description').setAttribute('content',post.excerpt?post.excerpt.replace(/<[^>]*>?/gm, '').replace(' [&hellip;]','...'):"A article titled: "+post.title)
            document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',post.excerpt?post.excerpt.replace(/<[^>]*>?/gm, '').replace(' [&hellip;]','...'):"A article titled: "+post.title)
         document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',post.post_thumbnail?post.post_thumbnail.URL:"")
         document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','article')
-        document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/"+post.slug)
-             document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/"+post.slug)
+        document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/"+post.slug+"/")
+             document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/"+post.slug+"/")
       }
 }

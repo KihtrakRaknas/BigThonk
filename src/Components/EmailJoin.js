@@ -24,6 +24,7 @@ export default class EmailJoin extends React.Component {
                                     <option value="32537">Updates every 3 days</option>
                                     <option value="32535">Daily Updates</option>
                                     <option value="32538">Updates once a week</option>
+                                    <option value="33054">Instant updates (1 email per blog post)</option>
                                 </select>
                                 <button type="button" className="btn btn-primary btn-block" onClick={this.submit}>Join!</button>
                                 <button type="button" className="btn btn-link" onClick={this.hideForever}>Click me to hide this forever</button>
@@ -41,8 +42,9 @@ export default class EmailJoin extends React.Component {
                     <input id="emailInput" type="email" className="form-control mr-2" aria-describedby="emailHelp" placeholder="Enter your email"/>
                     <select id="listInput" className="custom-select mb-2 mt-2 mr-2">
                         <option value="32537">Updates every 3 days</option>
-                        <option value="32535">Daily Updates</option>
+                        <option value="32535">Daily updates</option>
                         <option value="32538">Updates once a week</option>
+                        <option value="33054">Instant updates (1 email per blog post)</option>
                     </select>
                     <button type="button" className="btn btn-primary" onClick={this.submit}>Join!</button>
                 </form>

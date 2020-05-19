@@ -52,13 +52,18 @@ export default class Archive extends React.Component {
   }
 
   resetPageTags = ()=>{
+    if(document.querySelectorAll('[property="article:published_time"]').length>0)
+        document.querySelectorAll('[property="article:published_time"]')[0].remove()
+    if(document.querySelectorAll('[property="article:modified_time"]').length>0)
+        document.querySelectorAll('[property="article:modified_time"]')[0].remove()
                                                                 document.title = "A Lack Of Clarity!";
     document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"A Lack Of Clarity! - Archive")
+    document.getElementsByTagName('meta').namedItem('author').setAttribute('content',"Karthik Sankar")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"An archive of all the posts on this blog")
        document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"An archive of all the posts on this blog")
     document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")
     document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','website')
-    document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/archive")
-         document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/archive")
+    document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/archive/")
+         document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/archive/")
   }
 }

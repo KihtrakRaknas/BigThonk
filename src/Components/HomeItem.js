@@ -24,6 +24,6 @@ export default class HomeItem extends React.Component {
     }
 
     render(){
-        return(<div className={"col-sm-6"+ (this.state.small?" col-xl-3":" col-xl-4")}>{this.props.children}</div>)
+        return(<div className={"col-sm-6"+ (this.state.small?" col-xl-3":" col-xl-4")} style={{margin:0,padding:5}}>{this.props.children}</div>)
     }
 }

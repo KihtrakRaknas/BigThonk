@@ -51,7 +51,7 @@ export default class Home extends React.Component {
     console.log(event.target.value)
     this.cat = event.target.value
     this.page = 0;
-    this.setState({pages:[]})
+    this.setState({posts:[]})
     this.getPosts()
   }
 
@@ -130,8 +130,13 @@ export default class Home extends React.Component {
   }
 
   resetPageTags = ()=>{
+    if(document.querySelectorAll('[property="article:published_time"]').length>0)
+        document.querySelectorAll('[property="article:published_time"]')[0].remove()
+    if(document.querySelectorAll('[property="article:modified_time"]').length>0)
+        document.querySelectorAll('[property="article:modified_time"]')[0].remove()
                                                                 document.title = "A Lack Of Clarity!";
     document.querySelectorAll('[property="og:title"]')[0].setAttribute('content',"A Lack Of Clarity! - Home Page")
+    document.getElementsByTagName('meta').namedItem('author').setAttribute('content',"Karthik Sankar")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"A blog written by some high schoolers. Exploring the topics we find interesting. Read if you dare.")
        document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"Check out the blog!")
     document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")
