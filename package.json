@@ -1,6 +1,6 @@
 {
   "name": "big-thonk",
-  "version": "8.0.2",
+  "version": "8.0.3",
   "private": true,
   "homepage": "https://kihtrak.com/clarity",
   "dependencies": {
@@ -8,6 +8,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "autotrack": "^2.4.1",
+    "colorthief": "^2.3.0",
     "firebase": "^7.14.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
