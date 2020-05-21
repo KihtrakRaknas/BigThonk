@@ -3,7 +3,7 @@ import React from 'react'
 export default class HomeItem extends React.Component {
     constructor(props){
         super(props)
-        this.state={small:(window.innerWidth>=1800)}
+        this.state={small:(window.innerWidth>=1800),mobile:(window.innerWidth<=450)}
     }
 
     componentDidMount(){
@@ -21,9 +21,13 @@ export default class HomeItem extends React.Component {
           this.setState({small:(window.innerWidth>=1800)});
           this.lastScreenWidth=window.innerWidth;
         }
+        if((window.innerWidth<=575) != (this.lastScreenWidth<=450)){
+            this.setState({mobile:(window.innerWidth<=575)});
+            this.lastScreenWidth=window.innerWidth;
+        }
     }
 
     render(){
-        return(<div className={"col-sm-6"+ (this.state.small?" col-xl-3":" col-xl-4")} style={{margin:0,padding:5}}>{this.props.children}</div>)
+        return(<div className={"mt-2 mb-2 col-sm-6"+ (this.state.small?" col-xl-3":" col-xl-4")+ (!this.state.mobile?" pl-1 pr-1":"")} style={{margin:0,padding:0}}>{this.props.children}</div>)
     }
 }

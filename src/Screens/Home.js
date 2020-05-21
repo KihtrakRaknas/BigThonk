@@ -39,7 +39,7 @@ export default class Home extends React.Component {
             {this.state.categories}
           </select>
           
-          <Masonry className={'my-gallery-class'}>
+          <Masonry className={'my-gallery-class'} style={{padding:0}}>
             {this.state.posts.length>0?this.state.posts:<LoadingDiv></LoadingDiv>}
           </Masonry>
           {/*<div className="row"></div>*/}

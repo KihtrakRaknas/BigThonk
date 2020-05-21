@@ -83,8 +83,12 @@ export default class BlogPost extends React.Component {
             alert("Please include a name and a comment before posting");
         else{
             let postKey = postRef.child('comments').push().key
-            postRef.child('comments').update({[postKey]:{name,text}})
+            this.oldKeys.push(postKey)
+            postRef.child('comments').update({[postKey]:{name,text,time:firebase.database.ServerValue.TIMESTAMP}})
             document.getElementById("textInput").value = ""
+            let commentsEl = [...this.state.comments]
+            commentsEl.unshift(<Comment name={name} text={text} time={new Date().getTime()} key={text}></Comment>)
+            this.setState({comments:commentsEl,commentsLength:(this.commentsObj?Object.keys(this.commentsObj).length:0)+commentsEl.length, writing:false})
         }
     }
 
@@ -100,7 +104,16 @@ export default class BlogPost extends React.Component {
                 console.log(err)
             })
         postRef.child('comments').on('value',(snapshot)=>{
-            this.commentsObj = snapshot.val();
+            let snapVal = snapshot.val()?snapshot.val():{}
+            if(this.oldKeys){
+                for(let commentID in snapVal)
+                    if(this.oldKeys.indexOf(commentID)==-1)
+                        this.commentsObj[commentID] = snapVal[commentID]
+            }else
+                this.commentsObj = snapVal;
+            this.oldKeys = Object.keys(snapVal)
+            console.log(Object.keys(this.commentsObj).length)
+            this.setState({commentsLength: Object.keys(this.commentsObj).length + this.state.comments.length});
             if(this.state.comments.length===0)
                 this.get5Comments();
         })  
@@ -117,7 +130,7 @@ export default class BlogPost extends React.Component {
                 let commentID = Object.keys(this.commentsObj)[Math.floor(Math.random()*Object.keys(this.commentsObj).length)]
                 let comment = JSON.parse(JSON.stringify(this.commentsObj[commentID]))
                 delete this.commentsObj[commentID];
-                commentsEl.push(<Comment name={comment.name?comment.name:"No Name"} text={comment.text?comment.text:"No Text"} key={JSON.stringify(comment)}></Comment>)
+                commentsEl.push(<Comment name={comment.name?comment.name:"No Name"} text={comment.text?comment.text:"No Text"} time={comment.time} key={JSON.stringify(comment)}></Comment>)
             }
         console.log(commentsEl.length)
         this.setState({comments:commentsEl,commentsLength:(this.commentsObj?Object.keys(this.commentsObj).length:0)+commentsEl.length})

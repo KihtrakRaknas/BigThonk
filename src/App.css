@@ -180,8 +180,7 @@ hr{
 .card{
   background-color: black;
   border-color: #646665;
-  margin-top:10px;
-  margin-bottom:10px;
+  box-shadow: 3px 6px #474747cb;
 }
 .card-title{
   text-align: center;
