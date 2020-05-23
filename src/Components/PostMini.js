@@ -53,6 +53,8 @@ export default class PostMini extends React.Component {
     colorImgDone = (imgEl)=>{
         this.colorArr = colorThief.getColor(imgEl)
         this.alpha=.05
+        if(window.location.search == "?showBtn=false")
+            this.alpha =.95
         const result = "rgba("+this.colorArr.toString()+","+this.alpha+")";
         this.setState({postColor:result, textColor: ((this.colorArr[0]*299)+(this.colorArr[1]*587)+(this.colorArr[2]*114))/1000 >= 128 ? 'black' : 'white'})
         localStorage.setItem(this.props.img,"rgba("+this.colorArr.toString()+",1)")
@@ -72,7 +74,7 @@ export default class PostMini extends React.Component {
         postRef.on('value',(snapshot)=>{
             let snap = snapshot.val()
             if(snap)
-                this.setState({views: snap.views?snap.views:0,comments: snap.comments?Object.keys(snap.comments).length:0})
+                this.setState({views: snap.views?snap.views:0,comments: snap.comments&&Object.keys(snap.comments).length>0?Object.keys(snap.comments).length:0})
         })
     }
 

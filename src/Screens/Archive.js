@@ -61,7 +61,7 @@ export default class Archive extends React.Component {
     document.getElementsByTagName('meta').namedItem('author').setAttribute('content',"Karthik Sankar")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"An archive of all the posts on this blog")
        document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"An archive of all the posts on this blog")
-    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")
+    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"logo512.png")
     document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','website')
     document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',"https://kihtrak.com/clarity/archive/")
          document.querySelectorAll('[rel="canonical"]')[0].setAttribute('href',"https://kihtrak.com/clarity/archive/")

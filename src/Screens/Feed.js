@@ -83,7 +83,7 @@ export default class Feed extends React.Component {
     document.getElementsByTagName('meta').namedItem('author').setAttribute('content',"Karthik Sankar")
     document.getElementsByTagName('meta').namedItem('description').setAttribute('content',"A blog written by some high schoolers. Exploring the topics we find interesting. Read if you dare.")
     document.querySelectorAll('[property="og:description"]')[0].setAttribute('content',"This is the blog feed, it lets you veiw our posts all on one page!")
-    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"https://github.com/KihtrakRaknas/clarity/raw/master/src/Images/logo512.png")
+    document.querySelectorAll('[property="og:image"]')[0].setAttribute('content',"logo512.png")
     document.querySelectorAll('[property="og:type"]')[0].setAttribute('content','website')
     document.querySelectorAll('[property="og:url"]')[0].setAttribute('content',window.location.href)
   }
