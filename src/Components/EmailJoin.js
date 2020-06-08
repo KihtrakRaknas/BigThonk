@@ -26,8 +26,10 @@ export default class EmailJoin extends React.Component {
                                     <option value="32538">Updates once a week</option>
                                     <option value="33054">Instant updates (1 email per blog post)</option>
                                 </select>
-                                <button type="button" className="btn btn-primary btn-block" onClick={this.submit}>Join!</button>
-                                <button type="button" className="btn btn-link" onClick={this.hideForever}>Click me to hide this forever</button>
+                                <button type="button" className="btn btn-success btn-block mb-3" onClick={this.submit}>Join!</button>
+                                <h6>Or follow us on Instagram:</h6>
+                                <button type="button" className="btn btn-danger btn-block" onClick={()=>window.open("https://www.instagram.com/alackofclarity/", '_blank')}>Go to @alackofclarity</button>
+                                <button type="button" className="btn btn-link btn-block" onClick={this.hideForever}>Click here to hide this box forever</button>
                             </div>
                         </div>
                     </div>

@@ -34,7 +34,7 @@ export default class Home extends React.Component {
 
   render(){
     return (
-        <div id="home-screen" className="App container-fluid">
+        <div id="home-screen" className={`App${window.location.search !== "?showBtn=false"?` container-fluid`:``}`}>
           <select id="filter" className="custom-select mt-2" onChange={this.filterByCat}>
             {this.state.categories}
           </select>
@@ -120,11 +120,10 @@ export default class Home extends React.Component {
     }*/
     let miniPosts = [...this.state.posts];
     for(let post of postsJSON.posts){
-      //console.log(post)
       miniPosts.push(<PostMini id={post.slug} text={post.excerpt} date={new Date(post.date)} content={post.content} title={post.title} img={post.post_thumbnail?post.post_thumbnail.URL:null} name={post.author.first_name+" "+post.author.last_name} key={post.slug} categories={post.categories}></PostMini>)
     }
     if(this.page==1 && localStorage.getItem("hideEmailCard")!="true")
-      miniPosts.splice( 1+Math.floor(Math.random()*(miniPosts.length-1)), 0, <EmailJoin key="emailCard" card/>);
+      miniPosts.splice( 1/*+Math.floor(Math.random()*(miniPosts.length-1))*/, 0, <EmailJoin key="emailCard" card/>);
     //pages.push(<div id="Posts" key={"pageNum"+this.page} className="card-columns">{miniPosts}</div>)
     this.setState({posts:miniPosts})
   }

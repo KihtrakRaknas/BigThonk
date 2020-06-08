@@ -13,7 +13,7 @@ import Authors from './Screens/Authors'
 import packageJson from '../package.json'
 import About from './Screens/About';
 import Archive from './Screens/Archive'
-import LoadingDiv from './Components/LoadingDiv';
+import JoinUs from './Screens/JoinUs';
 
 Promise.all([
   import ('autotrack/lib/plugins/page-visibility-tracker'),
@@ -53,20 +53,13 @@ const semverGreaterThan = (versionA, versionB) => {
 };
 
 export default class App extends React.Component {
-  constructor(props){
-    super(props)
-    console.log("contructed")
-  }
     componentDidMount() {
-        console.log("Mount!")
         fetch('https://kihtrak.com/clarity/meta.json')
           .then((response) => {
-              console.log(response)
+              //console.log(response)
               return response.json()
           })
           .then((meta) => {
-            console.log("test")
-              console.log("test"+meta)
             const latestVersion = meta.version;
             const currentVersion = global.appVersion;
     
@@ -104,13 +97,16 @@ export default class App extends React.Component {
                                     <Link to="/" className="nav-link">Home</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/feed" className="nav-link">Feed</Link>
+                                    <Link to="/feed/" className="nav-link">Feed</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/about" className="nav-link">About</Link>
+                                    <Link to="/about/" className="nav-link">About</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/authors" className="nav-link">Authors</Link>
+                                    <Link to="/authors/" className="nav-link">Authors</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to="/joinus/" className="nav-link">Become An Author</Link>
                                 </li>
                             </ul>
                         </div>
@@ -122,6 +118,7 @@ export default class App extends React.Component {
                     <Route exact={true} path="/about" component = {About}/>
                     <Route exact={true} path="/authors" component = {Authors}/>
                     <Route exact={true} path="/archive" component = {Archive}/>
+                    <Route exact={true} path="/joinus" component = {JoinUs}/>
                     <Route path="/:postId" component={BlogPost} />
                     <Route exact={true} path="/" component = {Home}/>
                     {/*<Route>
@@ -129,7 +126,7 @@ export default class App extends React.Component {
                     </Route>*/}
                 </Switch>
                 <footer className="d-flex justify-content-between flex-wrap">
-                  <p>View the full blog <Link to="/archive">archive</Link></p><p>Follow us on Instagram for updates: <a href="https://www.instagram.com/alackofclarity/">@alackofclarity</a></p><p><small>&copy; Copyright {new Date().getFullYear()}, A Lack Of Clarity</small></p>
+                  <p>View the full blog <Link to="/archive/">archive</Link></p><p>Follow us on Instagram for updates: <a href="https://www.instagram.com/alackofclarity/">@alackofclarity</a></p><p><small>&copy; Copyright {new Date().getFullYear()}, A Lack Of Clarity</small></p>
                 </footer>
             </Router>
         );

@@ -10,7 +10,7 @@ const colorThief = new ColorThief();
 export default class PostMini extends React.Component {
     constructor(props) {
         super(props);
-        this.state={postColor:"black",textColor:"white"}
+        this.state={postColor:"black",textColor:"white", views:0, comments:0}
         if(this.props.img){
             if(!localStorage.getItem(this.props.img)){
                 fetch('https://cors-anywhere.herokuapp.com/'+this.props.img).then(res=>{
@@ -71,18 +71,17 @@ export default class PostMini extends React.Component {
 
     componentDidMount(){
         const postRef = firebase.database().ref(this.props.id)
+        //console.log(this.props.id +": req made")
         postRef.on('value',(snapshot)=>{
+            //console.log(this.props.id +" snap: "+JSON.stringify(snapshot))
             let snap = snapshot.val()
-            if(snap)
+            //console.log(this.props.id +": "+ snap)
+            if(snap){
                 this.setState({views: snap.views?snap.views:0,comments: snap.comments&&Object.keys(snap.comments).length>0?Object.keys(snap.comments).length:0})
+                //console.log(this.props.id +": "+ snap.views)
+            }
         })
     }
-
-    state={
-        views:0,
-        comments:0
-    }
-
     tag = (category, color) =>{
         return <small key={category} style={{display:"inline-block", paddingLeft:5,paddingRight:5,marginLeft:5,marginRight:3, paddingBottom:2, borderRadius:5, backgroundColor:color?color:"white", color:color?"white":"black"}}>{category}</small>
     }
@@ -111,11 +110,11 @@ export default class PostMini extends React.Component {
                 <div className="card" id={this.props.id} style={{backgroundColor:this.state.postColor}}>
                     {this.props.img?<img className="card-img-top" src={this.props.img} alt={this.props.title}/>:null}
                     <div className="card-body" style={{color: this.state.textColor}}>
-                        <h3 className="card-title"><strong>{this.props.title}</strong></h3>
+                        <h3 className="card-title"><strong>{ReactHtmlParser(this.props.title)}</strong></h3>
                         <div className="card-text categories" style={{textAlign:"center"}}>{catagories}</div>
                         <div className="card-text">{ReactHtmlParser(this.props.text.replace(' [&hellip;]','...'))}</div>
                         <div className="btn-div">
-                        {window.location.search !== "?showBtn=false"?<Link to={"/"+this.props.id} className={`btn btn btn-outline-${this.state.textColor=="black"?"dark":"light"}`}>Click Here to Read More</Link>:null}
+                        {window.location.search !== "?showBtn=false"?<Link to={"/"+this.props.id+"/"} className={`btn btn btn-outline-${this.state.textColor=="black"?"dark":"light"}`}>Click Here to Read More</Link>:null}
                         </div>
                     </div>
                     <div className="card-footer">

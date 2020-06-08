@@ -15,7 +15,8 @@ export default class BlogPost extends React.Component {
             postId = this.props.post.slug
         else
             postId = this.props.match.params.postId
-        console.log(postId)
+        postId = encodeURIComponent(postId).toLowerCase()
+        console.log("Constructor Post ID:"+postId)
         this.postId = postId;
         this.getPost()
     }
@@ -26,42 +27,31 @@ export default class BlogPost extends React.Component {
         let postId = this.props.match?this.props.match.params.postId:"feed"
         if(postId==="about")
             return  <div className="App container"><br/>{ReactHtmlParser(this.state.content)}</div>
-        console.log(this.state.err)
+        console.log(this.state.err?this.state.err:"No Errors")
         if(this.state.err)
             return  <div className="App container"><br/><br/><h1 className="text-center">Couldn't find the post you are looking for</h1><h3 className="text-center">Double check your link!</h3></div>
         console.log("rendering blogpost ");
-        console.log(this.state.content)
+        //console.log(this.state.content)
         //console.log(temp)
-        return(<div className="all-screen-container" itemscope itemtype="http://schema.org/BlogPosting">
+        return(<div className="all-screen-container" itemScope itemType="http://schema.org/BlogPosting">
             <div id="blogpost-screen" className="App container blogpost">
                     <br/>
                     {!this.state.content && false?<LoadingDiv></LoadingDiv>:<div>
-                        <h1 className="text-center" itemprop="headline">{this.state.title}</h1>
+                        <h1 className="text-center" itemProp="headline">{ReactHtmlParser(this.state.title)}</h1>
                         <div className="d-flex justify-content-between author-box"><p rel="author">{this.state.name&&this.state.name.trim()?this.state.name:<em>Anonymous Submission</em>}</p>{this.state.date?<p><span>Published </span><span>{`${this.state.date.toLocaleString('default', { month: 'short', day: "numeric", year: "numeric"})}   ${this.state.date.toLocaleTimeString().replace(/([\d])(:[\d]{2})(:[\d]{2})(.*)/, "$1$4")}`}</span></p>:null}</div>
                         <hr/>
                         <br/>
-                        <div itemprop="articleBody">{ReactHtmlParser(this.state.content)}</div>
+                        <div itemProp="articleBody">{ReactHtmlParser(this.state.content)}</div>
                         <br/>
                         <hr/>
                         <ShareBar url={"https://kihtrak.com/clarity/"+this.postId} title={this.state.title} name={this.state.name} image={this.state.image}/>
-                        <h2 className="text-center">Comments: <span itemprop="commentCount">({this.state.commentsLength})</span> </h2><br/>{this.commentInput()}
+                        <h2 className="text-center">Comments: <span itemProp="commentCount">({this.state.commentsLength})</span> </h2><br/>{this.commentInput()}
                         {this.state.comments.length>0?<div>{this.state.comments}{this.commentsObj&&Object.keys(this.commentsObj).length>0?<button className="btn btn btn-outline-info btn-block" onClick={this.get5Comments}>Show more comments</button>:null}</div>:<p><em>No comments yet. You could be the first!</em></p>}
                         <br/>
                     </div>}
             </div>
         </div>)
-    }
-    
-    componentDidUpdate = () =>{
-        if(document.getElementsByClassName("App container").length>0){
-            if(document.getElementsByClassName("App container")[document.getElementsByClassName("App container").length-1].classList.contains("blogpost"))
-                console.log("WORKING NORMALLY")
-            else{
-                console.log("adding blogpost")
-                document.getElementsByClassName("App container")[document.getElementsByClassName("App container").length-1].classList.add("blogpost")
-            }
-        }
-    }   
+    } 
 
     commentInput = ()=>{
         if(!this.state.writing)
@@ -93,9 +83,7 @@ export default class BlogPost extends React.Component {
     }
 
     checkFirebase = () =>{
-        console.log("post: "+this.postId)
         const postRef = firebase.database().ref(this.postId)
-        console.log("User Agent: "+navigator.userAgent)
         if(!navigator.userAgent.includes("headless")&&!navigator.userAgent.includes("ReactSnap"))
             postRef.child('views').transaction(function(views) {
                 return (views || 0) + 1;
@@ -103,6 +91,8 @@ export default class BlogPost extends React.Component {
                 console.log("FIREBASE DIDN'T UPDATE")
                 console.log(err)
             })
+        else
+            console.log("User Agent: "+navigator.userAgent)
         postRef.child('comments').on('value',(snapshot)=>{
             let snapVal = snapshot.val()?snapshot.val():{}
             if(this.oldKeys){
@@ -112,7 +102,7 @@ export default class BlogPost extends React.Component {
             }else
                 this.commentsObj = snapVal;
             this.oldKeys = Object.keys(snapVal)
-            console.log(Object.keys(this.commentsObj).length)
+            console.log("Number of unrendered comments:" + Object.keys(this.commentsObj).length)
             this.setState({commentsLength: Object.keys(this.commentsObj).length + this.state.comments.length});
             if(this.state.comments.length===0)
                 this.get5Comments();
@@ -132,7 +122,7 @@ export default class BlogPost extends React.Component {
                 delete this.commentsObj[commentID];
                 commentsEl.push(<Comment name={comment.name?comment.name:"No Name"} text={comment.text?comment.text:"No Text"} time={comment.time} key={JSON.stringify(comment)}></Comment>)
             }
-        console.log(commentsEl.length)
+        console.log("Number of comment elements: "+commentsEl.length)
         this.setState({comments:commentsEl,commentsLength:(this.commentsObj?Object.keys(this.commentsObj).length:0)+commentsEl.length})
     }
 
@@ -146,9 +136,6 @@ export default class BlogPost extends React.Component {
             this.checkFirebase();
         }else{
             let postId = this.postId === "about"?"first-blog-post":this.postId
-            console.log(postId)
-            console.log("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)
-            console.log(navigator.userAgent)
             if(navigator.userAgent.includes("headless"))
                 this.getPostFetch('https://wordpress-redirect.herokuapp.com/?url='+encodeURIComponent("https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/slug:"+postId)).catch((err)=>{
                     console.log(err)
@@ -170,8 +157,6 @@ export default class BlogPost extends React.Component {
             if(post.error)
                 this.setState({err:true})
             else{
-                //console.log(post)
-                console.log(post.author.first_name)
                 this.updatePageTags(post)
                 console.log("page tags updated")
                 this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
