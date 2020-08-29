@@ -97,6 +97,16 @@ export default class PostMini extends React.Component {
         return "Very Advanced"
     }
 
+    cleanExcerpt = (excerpt) =>{
+        let writtenByIndex = excerpt.indexOf("Written by: ")
+        if(writtenByIndex!=-1){
+            let endOfFirstP = excerpt.indexOf(";")+";".length
+            if(writtenByIndex<endOfFirstP)
+                return excerpt.substring(0,writtenByIndex) + excerpt.substring(endOfFirstP)
+        }
+        return excerpt
+    }
+
     render(){
         let catagories = []
         //console.log(this.props.categories)
@@ -112,7 +122,7 @@ export default class PostMini extends React.Component {
                     <div className="card-body" style={{color: this.state.textColor}}>
                         <h3 className="card-title"><strong>{ReactHtmlParser(this.props.title)}</strong></h3>
                         <div className="card-text categories" style={{textAlign:"center"}}>{catagories}</div>
-                        <div className="card-text">{ReactHtmlParser(this.props.text.replace(' [&hellip;]','...'))}</div>
+                        <div className="card-text">{ReactHtmlParser(this.cleanExcerpt(this.props.text.replace(' [&hellip;]','...')))}</div>
                         <div className="btn-div">
                         {window.location.search !== "?showBtn=false"?<Link to={"/"+this.props.id+"/"} className={`btn btn btn-outline-${this.state.textColor=="black"?"dark":"light"}`}>Click Here to Read More</Link>:null}
                         </div>

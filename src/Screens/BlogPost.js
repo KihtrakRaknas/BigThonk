@@ -6,6 +6,7 @@ import firebase from '../firebase.js'
 import '../WordPressCore.css';
 import '../App.css';
 import ShareBar from '../Components/ShareBar';
+import getAuthorFromPost from '../Scripts/getAuthorFromPost.js'
 
 export default class BlogPost extends React.Component {
     constructor(props) {
@@ -126,13 +127,23 @@ export default class BlogPost extends React.Component {
         this.setState({comments:commentsEl,commentsLength:(this.commentsObj?Object.keys(this.commentsObj).length:0)+commentsEl.length})
     }
 
+    cleanContent = (content) =>{
+        let writtenByIndex = content.indexOf("Written by: ")
+        if(writtenByIndex!=-1){
+            let endOfFirstP = content.indexOf("</p>")+"</p>".length
+            if(writtenByIndex<endOfFirstP)
+                return content.substring(endOfFirstP)
+        }
+        return content
+    }
+
     getPost = ()=>{
         if(this.props.post){
             let post = this.props.post;
             //console.log(post)
             
             this.updatePageTags(post)
-            this.state = {name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false, comments:[]}
+            this.state = {name:getAuthorFromPost(post),title:post.title,content:this.cleanContent(post.content), date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false, comments:[]}
             this.checkFirebase();
         }else{
             let postId = this.postId === "about"?"first-blog-post":this.postId
@@ -159,7 +170,7 @@ export default class BlogPost extends React.Component {
             else{
                 this.updatePageTags(post)
                 console.log("page tags updated")
-                this.setState({name:post.author.first_name+" "+post.author.last_name,title:post.title,content:post.content, date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
+                this.setState({name:getAuthorFromPost(post),title:post.title,content:this.cleanContent(post.content), date:new Date(post.date), image:post.post_thumbnail?post.post_thumbnail.URL:"", err:false})
                 console.log("STATE UPDATED")
                 if(this.postId !== "about")
                     this.checkFirebase();
@@ -170,7 +181,7 @@ export default class BlogPost extends React.Component {
       updatePageTags = (post)=>{
                                                                      document.title = post.title;
         document.querySelectorAll('[property="og:title"]')[0].setAttribute('content', post.title)
-        document.getElementsByTagName('meta').namedItem('author').setAttribute('content',post.author.first_name+" "+post.author.last_name)
+        document.getElementsByTagName('meta').namedItem('author').setAttribute('content',getAuthorFromPost(post))
         if(document.querySelectorAll('[property="article:published_time"]').length>0)
             document.querySelectorAll('[property="article:published_time"]')[0].setAttribute('content',post.date)
         else{

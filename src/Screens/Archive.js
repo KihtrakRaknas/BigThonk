@@ -1,6 +1,7 @@
 import React from 'react';
 import LoadingDiv from '../Components/LoadingDiv';
 import {Link} from "react-router-dom";
+import getAuthorFromPost from '../Scripts/getAuthorFromPost.js'
 
 export default class Archive extends React.Component {
   constructor(props) {
@@ -44,7 +45,7 @@ export default class Archive extends React.Component {
     for(let post of postsJSON.posts){
       //console.log(post)
       //href={"https://kihtrak.com/clarity/"+post.slug}
-      posts.push(<p key={post.slug}><Link to={"/"+post.slug+"/"} >{`${new Date(post.date).toLocaleDateString()} - ${post.title} by: ${post.author.first_name+" "+post.author.last_name}`}</Link></p>)
+      posts.push(<p key={post.slug}><Link to={"/"+post.slug+"/"} >{`${new Date(post.date).toLocaleDateString()} - ${post.title} by: ${getAuthorFromPost(post)}`}</Link></p>)
     }
     this.setState({posts})
     if(postsJSON.meta.next_page || postsJSON.found>this.page*100)

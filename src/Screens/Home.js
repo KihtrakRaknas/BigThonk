@@ -3,6 +3,7 @@ import PostMini from '../Components/PostMini';
 import LoadingDiv from '../Components/LoadingDiv';
 import EmailJoin from '../Components/EmailJoin'
 import Masonry from 'react-masonry-component';
+import getAuthorFromPost from '../Scripts/getAuthorFromPost.js'
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -94,7 +95,7 @@ export default class Home extends React.Component {
     this.page++;
     console.log(this.page)
     this.readyToCheckForMore=false;
-    let link = "https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/?category="+this.cat+"&page="+this.page
+    let link = "https://public-api.wordpress.com/rest/v1.1/sites/176343073/posts/?category="+this.cat+"&page="+this.page+"&number=10"
     console.log(link)
     fetch(link).then((res)=>res.json()).then((postsJSON)=>{
       this.updateWithPostsJSON(postsJSON)
@@ -109,7 +110,7 @@ export default class Home extends React.Component {
   }
 
   updateWithPostsJSON = (postsJSON) =>{
-    if(postsJSON.meta.next_page || postsJSON.found>this.page*20)
+    if(postsJSON.meta.next_page || postsJSON.found>this.page*10)
       this.isMore = true;
     else
       this.isMore = false;
@@ -120,7 +121,7 @@ export default class Home extends React.Component {
     }*/
     let miniPosts = [...this.state.posts];
     for(let post of postsJSON.posts){
-      miniPosts.push(<PostMini id={post.slug} text={post.excerpt} date={new Date(post.date)} content={post.content} title={post.title} img={post.post_thumbnail?post.post_thumbnail.URL:null} name={post.author.first_name+" "+post.author.last_name} key={post.slug} categories={post.categories}></PostMini>)
+      miniPosts.push(<PostMini id={post.slug} text={post.excerpt} date={new Date(post.date)} content={post.content} title={post.title} img={post.post_thumbnail?post.post_thumbnail.URL:null} name={getAuthorFromPost(post)} key={post.slug} categories={post.categories}></PostMini>)
     }
     if(this.page==1 && localStorage.getItem("hideEmailCard")!="true")
       miniPosts.splice( 1/*+Math.floor(Math.random()*(miniPosts.length-1))*/, 0, <EmailJoin key="emailCard" card/>);
